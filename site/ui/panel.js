@@ -3,7 +3,13 @@
 'use strict';
 
 import ImageElement from './imageElement';
+import ImageElementSplit from './imageElementSplit';
 import JsonElement from './jsonElement';
+
+const EVENT_NAME_NEXT = 'google-next';
+const EVENT_NAME_HORIZON = 'google-horizon';
+// const EVENT = EVENT_NAME_NEXT;
+const EVENT = EVENT_NAME_HORIZON;
 
 export default class Panel {
   constructor(jsonData) {
@@ -19,9 +25,16 @@ export default class Panel {
   }
 
   init() {
-    this.image = new ImageElement(this.imagePath, this.respPath, () => {
-       this.imageIsReady();
-    });
+    if (EVENT === EVENT_NAME_NEXT) {
+      this.image = new ImageElement(this.imagePath, this.respPath, () => {
+         this.imageIsReady();
+      });
+    } else {
+      this.image = new ImageElementSplit(this.imagePath, this.respPath, () => {
+         this.imageIsReady();
+      });
+    }
+
     this.jsonElement = new JsonElement(this.reqPath, this.respPath);
     this.sequenceTimeouts = [];
     this.loadPanel();
@@ -53,7 +66,7 @@ export default class Panel {
     this.reqPath = newReqPath;
     this.respPath = newRespPath;
 
-    this.image.imgPath = this.imagePath;
+    this.image.imagePath = this.imagePath;
     this.image.jsonPath = this.respPath;
 
     this.jsonElement.reqPath = this.reqPath;
@@ -92,7 +105,7 @@ export default class Panel {
     xhr.onreadystatechange = () => {
       if (xhr.readyState === XMLHttpRequest.DONE) {
         const reqJson = JSON.parse(xhr.responseText);
-        this.image.loadImage(respJson, this.imgPath);
+        this.image.loadImage(respJson, this.imagePath);
         if (this.jsonElement) {
           this.jsonElement.loadJSON(reqJson, respJson);
         }
@@ -107,7 +120,7 @@ export default class Panel {
       this.origPath = jsonData.origPath;
       this.reqPath = jsonData.reqPath;
       this.respPath = jsonData.respPath;
-      this.imgPath = jsonData.origPath;
+      this.imagePath = jsonData.origPath;
     }
     this.loadRespPath();
   }

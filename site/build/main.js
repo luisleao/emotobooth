@@ -50,7 +50,7 @@
 	
 	__webpack_require__(2);
 	
-	__webpack_require__(28);
+	__webpack_require__(39);
 
 
 /***/ },
@@ -116,11 +116,11 @@
 	
 	var _panel2 = _interopRequireDefault(_panel);
 	
-	var _threeup = __webpack_require__(19);
+	var _threeup = __webpack_require__(30);
 	
 	var _threeup2 = _interopRequireDefault(_threeup);
 	
-	var _controls = __webpack_require__(20);
+	var _controls = __webpack_require__(31);
 	
 	var _controls2 = _interopRequireDefault(_controls);
 	
@@ -159,7 +159,6 @@
 	}
 	
 	function createPanel(jsonData) {
-	  console.log("CREATE PANEL // ");
 	  if (panels.length < 3) {
 	    oldestPanel = panels.length + 1;
 	
@@ -235,7 +234,6 @@
 	}
 	
 	newImage = function newImage(data, delay, index) {
-	  console.log('NEW IMAGE // ');
 	  var jsonData = typeof data === 'string' ? JSON.parse(data) : data;
 	  // Zero would mean that it's a historical refresh, not a new image to load.
 	  if (delay === 0) {
@@ -243,7 +241,6 @@
 	    setRefreshTimeout();
 	    createThreeup(jsonData, true);
 	  } else if (!showGrid || index === 0) {
-	    console.log('DELAY // ', delay);
 	    refreshTiming = refreshPostTiming;
 	    setRefreshTimeout();
 	    setTimeout(function () {
@@ -251,7 +248,6 @@
 	      xhr.onreadystatechange = function () {
 	        if (xhr.readyState === XMLHttpRequest.DONE) {
 	          var imageExists = Number(xhr.getResponseHeader('Content-Length')) > 0;
-	          console.log('IMAGE EXISTS // ', imageExists);
 	          if (imageExists) {
 	            // create new panel
 	            if (!showGrid) {
@@ -305,19 +301,19 @@
 	
 	function loadStatesAndTimes() {
 	  if (timingsType === 'fast') {
-	    window.states = __webpack_require__(21);
+	    window.states = __webpack_require__(32);
 	  } else if (timingsType === 'finalOnly') {
-	    window.states = __webpack_require__(22);
+	    window.states = __webpack_require__(33);
 	  } else if (timingsType === 'noFace') {
-	    window.states = __webpack_require__(23);
+	    window.states = __webpack_require__(34);
 	  } else if (timingsType === 'noAura') {
-	    window.states = __webpack_require__(24);
+	    window.states = __webpack_require__(35);
 	  } else if (timingsType === 'noChrome') {
-	    window.states = __webpack_require__(25);
+	    window.states = __webpack_require__(36);
 	  } else if (timingsType === 'finalOnlyNoChrome') {
-	    window.states = __webpack_require__(26);
+	    window.states = __webpack_require__(37);
 	  } else {
-	    window.states = __webpack_require__(27);
+	    window.states = __webpack_require__(38);
 	  }
 	}
 	
@@ -440,13 +436,22 @@
 	
 	var _imageElement2 = _interopRequireDefault(_imageElement);
 	
-	var _jsonElement = __webpack_require__(18);
+	var _imageElementSplit = __webpack_require__(43);
+	
+	var _imageElementSplit2 = _interopRequireDefault(_imageElementSplit);
+	
+	var _jsonElement = __webpack_require__(29);
 	
 	var _jsonElement2 = _interopRequireDefault(_jsonElement);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var EVENT_NAME_NEXT = 'google-next';
+	var EVENT_NAME_HORIZON = 'google-horizon';
+	// const EVENT = EVENT_NAME_NEXT;
+	var EVENT = EVENT_NAME_HORIZON;
 	
 	var Panel = function () {
 	  function Panel(jsonData) {
@@ -468,10 +473,16 @@
 	    value: function init() {
 	      var _this = this;
 	
-	      console.log('NEW PANEL // ');
-	      this.image = new _imageElement2.default(this.imagePath, this.respPath, function () {
-	        _this.imageIsReady();
-	      });
+	      if (EVENT === EVENT_NAME_NEXT) {
+	        this.image = new _imageElement2.default(this.imagePath, this.respPath, function () {
+	          _this.imageIsReady();
+	        });
+	      } else {
+	        this.image = new _imageElementSplit2.default(this.imagePath, this.respPath, function () {
+	          _this.imageIsReady();
+	        });
+	      }
+	
 	      this.jsonElement = new _jsonElement2.default(this.reqPath, this.respPath);
 	      this.sequenceTimeouts = [];
 	      this.loadPanel();
@@ -511,7 +522,7 @@
 	      this.reqPath = newReqPath;
 	      this.respPath = newRespPath;
 	
-	      this.image.imgPath = this.imagePath;
+	      this.image.imagePath = this.imagePath;
 	      this.image.jsonPath = this.respPath;
 	
 	      this.jsonElement.reqPath = this.reqPath;
@@ -555,12 +566,11 @@
 	    value: function loadReqPath(respJson) {
 	      var _this4 = this;
 	
-	      console.log('LOAD REQ PATH // ');
 	      var xhr = new XMLHttpRequest();
 	      xhr.onreadystatechange = function () {
 	        if (xhr.readyState === XMLHttpRequest.DONE) {
 	          var reqJson = JSON.parse(xhr.responseText);
-	          _this4.image.loadImage(respJson, _this4.imgPath);
+	          _this4.image.loadImage(respJson, _this4.imagePath);
 	          if (_this4.jsonElement) {
 	            _this4.jsonElement.loadJSON(reqJson, respJson);
 	          }
@@ -576,7 +586,7 @@
 	        this.origPath = jsonData.origPath;
 	        this.reqPath = jsonData.reqPath;
 	        this.respPath = jsonData.respPath;
-	        this.imgPath = jsonData.origPath;
+	        this.imagePath = jsonData.origPath;
 	      }
 	      this.loadRespPath();
 	    }
@@ -622,15 +632,15 @@
 	
 	var _panelComponent2 = _interopRequireDefault(_panelComponent);
 	
-	var _assets = __webpack_require__(15);
+	var _assets = __webpack_require__(27);
 	
 	var assets = _interopRequireWildcard(_assets);
 	
-	var _easings = __webpack_require__(16);
+	var _easings = __webpack_require__(17);
 	
 	var ease = _interopRequireWildcard(_easings);
 	
-	var _utils = __webpack_require__(17);
+	var _utils = __webpack_require__(20);
 	
 	var utils = _interopRequireWildcard(_utils);
 	
@@ -649,6 +659,10 @@
 	var _colorUtils = __webpack_require__(10);
 	
 	var colorUtils = _interopRequireWildcard(_colorUtils);
+	
+	var _imageConst = __webpack_require__(28);
+	
+	var imageConst = _interopRequireWildcard(_imageConst);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -675,8 +689,8 @@
 	
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ImageElement).call(this));
 	
-	    _this.canvasWidth = single ? animationUtils.BACKEND_CANVAS_WIDTH : animationUtils.CANVAS_WIDTH;
-	    _this.canvasHeight = single ? animationUtils.BACKEND_CANVAS_HEIGHT : animationUtils.CANVAS_HEIGHT;
+	    _this.canvasWidth = single ? imageConst.BACKEND_CANVAS_WIDTH : imageConst.CANVAS_WIDTH;
+	    _this.canvasHeight = single ? imageConst.BACKEND_CANVAS_HEIGHT : imageConst.CANVAS_HEIGHT;
 	
 	    _this.imgPath = imgPath;
 	    _this.imageElement = null;
@@ -834,7 +848,6 @@
 	    value: function loadImage(json, imgPath) {
 	      var _this4 = this;
 	
-	      console.log('LOAD IMAGE // ');
 	      this.reinitFaces(json);
 	
 	      var image = new Image();
@@ -847,11 +860,6 @@
 	        _this4.setImageScale();
 	        _this4.generateHexInfo();
 	        _this4.cleanUpImage();
-	      };
-	
-	      image.onerror = function (err) {
-	        console.log('IMAGE ERROR // ');
-	        console.log(err);
 	      };
 	    }
 	  }, {
@@ -3134,7 +3142,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.CERTAINTY_HALO_RADII = exports.POINTS_FADE_DURATION = exports.MIN_DURATION = exports.EMOTION_HEX_FADE_DURATION = exports.CORNER_SHADOW_HIDE_RADIUS = exports.SHADOW_HIDE_FEATHER = exports.SIDE_SHADOW_HIDE_WIDTH = exports.MAX_HEX_DIFF = exports.MAX_HEX_RADIUS = exports.MIN_HEX_RADIUS = exports.JSON_PATHS = exports.CHROME_TALL_HEIGHT = exports.CHROME_SHORT_HEIGHT = exports.CHROME_SPACE_BETWEEN_LINES = exports.CHROME_SINGLE_LINE_HEIGHT = exports.BACKEND_CHROME_ITEM_WIDTH = exports.CHROME_ITEM_WIDTH = exports.CHROME_VERTICAL_PADDING = exports.CHROME_HORIZONTAL_PADDING = exports.CHROME_HEX_RADIUS = exports.CHROME_MAX_ITEMS = exports.CHROME_MAX_ROWS = exports.HALO_BLEND = exports.HALO_ALPHA = exports.HALO_INNER_COLOR_RANDOM = exports.HALO_OUTER_COLOR = exports.VIGNETTE_BLEND = exports.VIGNETTE_ALPHA = exports.VIGNETTE_RADIUS = exports.VIGNETTE_OUTER_COLOR_RANDOM = exports.VIGNETTE_CENTER_COLOR = exports.BG_ALPHA = exports.BLEND_NORMAL = exports.HEXAGON_CORNER_RADIUS = exports.BACKEND_CANVAS_HEIGHT = exports.BACKEND_CANVAS_WIDTH = exports.HEX_MIN_BOTTOM_EYES_MARGIN = exports.HEX_MIN_BOTTOM_VERTICAL_MARGIN = exports.HEX_UPPER_MIN_VERTICAL_MARGIN = exports.HEX_LOWER_MIN_VERTICAL_MARGIN = exports.CANVAS_HEIGHT = exports.CANVAS_WIDTH = undefined;
+	exports.CERTAINTY_HALO_RADII = exports.POINTS_FADE_DURATION = exports.MIN_DURATION = exports.EMOTION_HEX_FADE_DURATION = exports.CORNER_SHADOW_HIDE_RADIUS = exports.SHADOW_HIDE_FEATHER = exports.SIDE_SHADOW_HIDE_WIDTH = exports.MAX_HEX_DIFF = exports.MAX_HEX_RADIUS = exports.MIN_HEX_RADIUS = exports.JSON_PATHS = exports.CHROME_TALL_HEIGHT = exports.CHROME_SHORT_HEIGHT = exports.CHROME_SPACE_BETWEEN_LINES = exports.CHROME_SINGLE_LINE_HEIGHT = exports.BACKEND_CHROME_ITEM_WIDTH = exports.CHROME_ITEM_WIDTH = exports.CHROME_VERTICAL_PADDING = exports.CHROME_HORIZONTAL_PADDING = exports.CHROME_HEX_RADIUS = exports.CHROME_MAX_ITEMS = exports.CHROME_MAX_ROWS = exports.HALO_BLEND = exports.HALO_ALPHA = exports.HALO_INNER_COLOR_RANDOM = exports.HALO_OUTER_COLOR = exports.VIGNETTE_BLEND = exports.VIGNETTE_ALPHA = exports.VIGNETTE_RADIUS = exports.VIGNETTE_OUTER_COLOR_RANDOM = exports.VIGNETTE_CENTER_COLOR = exports.BG_ALPHA = exports.BLEND_NORMAL = exports.HEXAGON_CORNER_RADIUS = exports.HEX_MIN_BOTTOM_EYES_MARGIN = exports.HEX_MIN_BOTTOM_VERTICAL_MARGIN = exports.HEX_UPPER_MIN_VERTICAL_MARGIN = exports.HEX_LOWER_MIN_VERTICAL_MARGIN = undefined;
 	exports.generateSinglePersonTreatment = generateSinglePersonTreatment;
 	exports.generatePersonalAuraColors = generatePersonalAuraColors;
 	exports.generateGroupAuraColors = generateGroupAuraColors;
@@ -3154,19 +3162,15 @@
 	
 	var geometryUtils = _interopRequireWildcard(_geometryUtils);
 	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	var _imageConst = __webpack_require__(28);
 	
-	var CANVAS_WIDTH = exports.CANVAS_WIDTH = 1080;
-	var CANVAS_HEIGHT = exports.CANVAS_HEIGHT = 640;
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	var HEX_LOWER_MIN_VERTICAL_MARGIN = exports.HEX_LOWER_MIN_VERTICAL_MARGIN = 10;
 	var HEX_UPPER_MIN_VERTICAL_MARGIN = exports.HEX_UPPER_MIN_VERTICAL_MARGIN = 30;
 	var HEX_MIN_BOTTOM_VERTICAL_MARGIN = exports.HEX_MIN_BOTTOM_VERTICAL_MARGIN = 180;
 	
 	var HEX_MIN_BOTTOM_EYES_MARGIN = exports.HEX_MIN_BOTTOM_EYES_MARGIN = 0.5;
-	
-	var BACKEND_CANVAS_WIDTH = exports.BACKEND_CANVAS_WIDTH = CANVAS_WIDTH * 2 - 112;
-	var BACKEND_CANVAS_HEIGHT = exports.BACKEND_CANVAS_HEIGHT = CANVAS_HEIGHT * 2;
 	
 	var HEXAGON_CORNER_RADIUS = exports.HEXAGON_CORNER_RADIUS = 10;
 	
@@ -3190,8 +3194,8 @@
 	var CHROME_HEX_RADIUS = exports.CHROME_HEX_RADIUS = 12.5;
 	var CHROME_HORIZONTAL_PADDING = exports.CHROME_HORIZONTAL_PADDING = 40;
 	var CHROME_VERTICAL_PADDING = exports.CHROME_VERTICAL_PADDING = 25;
-	var CHROME_ITEM_WIDTH = exports.CHROME_ITEM_WIDTH = (CANVAS_WIDTH - CHROME_HORIZONTAL_PADDING * 2) / 5;
-	var BACKEND_CHROME_ITEM_WIDTH = exports.BACKEND_CHROME_ITEM_WIDTH = (BACKEND_CANVAS_WIDTH - CHROME_HORIZONTAL_PADDING * 2) / 10;
+	var CHROME_ITEM_WIDTH = exports.CHROME_ITEM_WIDTH = (_imageConst.CANVAS_WIDTH - CHROME_HORIZONTAL_PADDING * 2) / 5;
+	var BACKEND_CHROME_ITEM_WIDTH = exports.BACKEND_CHROME_ITEM_WIDTH = (_imageConst.BACKEND_CANVAS_WIDTH - CHROME_HORIZONTAL_PADDING * 2) / 10;
 	var CHROME_SINGLE_LINE_HEIGHT = exports.CHROME_SINGLE_LINE_HEIGHT = 75 - CHROME_VERTICAL_PADDING * 2;
 	var CHROME_SPACE_BETWEEN_LINES = exports.CHROME_SPACE_BETWEEN_LINES = 12.5;
 	var CHROME_SHORT_HEIGHT = exports.CHROME_SHORT_HEIGHT = CHROME_SINGLE_LINE_HEIGHT + CHROME_VERTICAL_PADDING * 2;
@@ -5496,17 +5500,590 @@
 
 /***/ },
 /* 15 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
+	/* global require */
+	
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var logoSrc = exports.logoSrc = 'data:image/png;base64,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';
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _canvasUtils = __webpack_require__(16);
+	
+	var _canvasUtils2 = _interopRequireDefault(_canvasUtils);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Tween = __webpack_require__(11);
+	var Timeline = __webpack_require__(13);
+	
+	var FlashStep = function () {
+	  function FlashStep(imageElement, canvas, context, duration) {
+	    _classCallCheck(this, FlashStep);
+	
+	    this.imageElement = imageElement;
+	    this.canvas = canvas;
+	    this.context = context;
+	    this.canvasUtils = new _canvasUtils2.default(imageElement, canvas, context);
+	
+	    this.flash(duration);
+	  }
+	
+	  _createClass(FlashStep, [{
+	    key: 'flash',
+	    value: function flash() {
+	      var _this = this;
+	
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      var thisTimeline = new Timeline({
+	        onComplete: function onComplete() {
+	          _this.imageElement.killTimeline(thisTimeline);
+	        }
+	      });
+	      var origBrightness = 100;
+	      var currBrightness = origBrightness;
+	      var targetBrightness = 200;
+	
+	      var flashUpTime = duration * 0.2;
+	      var flashDownTime = duration - flashUpTime;
+	
+	      var currActive = null;
+	      thisTimeline.to(this.canvas, flashUpTime, {
+	        onStart: function onStart() {
+	          currActive = thisTimeline.getActive()[0];
+	          _this.imageElement.tweens.push(currActive);
+	        },
+	        onUpdate: function onUpdate() {
+	          if (currActive) {
+	            currBrightness = origBrightness + (targetBrightness - origBrightness) * Math.pow(currActive.progress(), 2);
+	            Tween.set(_this.canvas, {
+	              css: {
+	                '-webkit-filter': 'brightness(' + currBrightness + '%)'
+	              }
+	            });
+	          }
+	        },
+	        onComplete: function onComplete() {
+	          _this.imageElement.killTween(currActive);
+	        }
+	      });
+	      thisTimeline.to(this.canvas, flashDownTime, {
+	        onStart: function onStart() {
+	          currActive = thisTimeline.getActive()[0];
+	          _this.imageElement.tweens.push(currActive);
+	        },
+	        onUpdate: function onUpdate() {
+	          if (currActive) {
+	            currBrightness = targetBrightness - (targetBrightness - origBrightness) * Math.pow(currActive.progress(), 2);
+	            Tween.set(_this.canvas, {
+	              css: {
+	                '-webkit-filter': 'brightness(' + currBrightness + '%)'
+	              }
+	            });
+	          }
+	        },
+	        onComplete: function onComplete() {
+	          _this.imageElement.killTween(currActive);
+	        }
+	      });
+	      thisTimeline.to(this.canvas, 0, {
+	        clearProps: '-webkit-filter'
+	      });
+	
+	      this.imageElement.timelines.push(thisTimeline);
+	    }
+	  }]);
+	
+	  return FlashStep;
+	}();
+	
+	exports.default = FlashStep;
 
 /***/ },
 /* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* global require, single, document, window, Image */
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _easings = __webpack_require__(17);
+	
+	var ease = _interopRequireWildcard(_easings);
+	
+	var _animationUtils = __webpack_require__(9);
+	
+	var animationUtils = _interopRequireWildcard(_animationUtils);
+	
+	var _geometryUtils = __webpack_require__(8);
+	
+	var geometryUtils = _interopRequireWildcard(_geometryUtils);
+	
+	var _colorUtils = __webpack_require__(10);
+	
+	var colorUtils = _interopRequireWildcard(_colorUtils);
+	
+	var _pointUtils = __webpack_require__(18);
+	
+	var _pointUtils2 = _interopRequireDefault(_pointUtils);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Timeline = __webpack_require__(13);
+	
+	var CanvasUtils = function () {
+	  function CanvasUtils(imageElement) {
+	    _classCallCheck(this, CanvasUtils);
+	
+	    this.imageElement = imageElement;
+	    this.backgroundFill = 'blue';
+	
+	    this.pointUtils = new _pointUtils2.default(imageElement);
+	
+	    this.PIXEL_RATIO = function () {
+	      var ctx = document.createElement('canvas').getContext('2d'),
+	          dpr = window.devicePixelRatio || 1,
+	          bsr = ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1;
+	
+	      return dpr / bsr;
+	    }();
+	  }
+	
+	  _createClass(CanvasUtils, [{
+	    key: 'retraceCanvas',
+	    value: function retraceCanvas() {
+	      this.imageElement.context.beginPath();
+	      this.imageElement.context.moveTo(0, 0);
+	      this.imageElement.context.lineTo(this.imageElement.canvas.width, 0);
+	      this.imageElement.context.lineTo(this.imageElement.canvas.width, this.imageElement.canvas.height);
+	      this.imageElement.context.lineTo(0, this.imageElement.canvas.height);
+	      this.imageElement.context.lineTo(0, 0);
+	      this.imageElement.context.closePath();
+	    }
+	  }, {
+	    key: 'createHiDPICanvas',
+	    value: function createHiDPICanvas(w, h, ratio) {
+	      if (!ratio) {
+	        ratio = this.PIXEL_RATIO;
+	      }
+	      var tempCanvas = document.createElement('canvas');
+	      tempCanvas.width = w * ratio;
+	      tempCanvas.height = h * ratio;
+	      tempCanvas.style.width = w + 'px';
+	      tempCanvas.style.height = h + 'px';
+	      tempCanvas.getContext('2d').setTransform(ratio, 0, 0, ratio, 0, 0);
+	      return tempCanvas;
+	    }
+	  }, {
+	    key: 'drawScrim',
+	    value: function drawScrim() {
+	      var callback = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+	
+	      if (this.imageElement.scrimAlpha === 0) {
+	        this.imageElement.context.clearRect(0, 0, this.imageElement.canvas.width, this.imageElement.canvas.height);
+	        this.imageElement.context.drawImage(this.imageElement.image, this.imageElement.offsetX, this.imageElement.offsetY, this.imageElement.width, this.imageElement.height, 0, 0, this.imageElement.canvas.width, this.imageElement.canvas.height);
+	      } else {
+	        this.imageElement.context.globalAlpha = this.imageElement.scrimAlpha * colorUtils.SCRIM_MAX_ALPHA;
+	        this.imageElement.context.fillStyle = 'rgb(0, 0, 0)';
+	        this.imageElement.context.fillRect(0, 0, this.imageElement.canvas.width, this.imageElement.canvas.height);
+	        this.imageElement.context.globalAlpha = 1;
+	      }
+	      if (callback) {
+	        callback();
+	      }
+	    }
+	  }, {
+	    key: 'redrawCurrentCanvas',
+	    value: function redrawCurrentCanvas() {
+	      this.retraceCanvas();
+	      this.imageElement.context.globalAlpha = 1;
+	      this.imageElement.context.globalCompositeOperation = 'source-over';
+	      this.imageElement.context.clearRect(0, 0, this.imageElement.canvas.width, this.imageElement.canvas.height);
+	      this.imageElement.context.fillStyle = this.imageElement.canvasSnapshot;
+	      this.imageElement.context.fill();
+	    }
+	  }, {
+	    key: 'redrawBaseImage',
+	    value: function redrawBaseImage() {
+	      this.retraceCanvas();
+	      this.imageElement.context.globalAlpha = 1;
+	      this.imageElement.context.globalCompositeOperation = 'source-over';
+	      this.imageElement.context.clearRect(0, 0, this.imageElement.canvas.width, this.imageElement.canvas.height);
+	
+	      this.fillBackground();
+	
+	      if (single && (this.imageElement.offsetY < 0 || this.imageElement.offsetX < 0)) {
+	        this.imageElement.offsetX = (this.imageElement.subRect.width - this.imageElement.image.width) / 2 / this.imageElement.resizedImageScale;
+	        this.imageElement.offsetY = (this.imageElement.subRect.height - this.imageElement.image.height) / this.imageElement.resizedImageScale;
+	
+	        this.imageElement.context.drawImage(this.imageElement.image, 0, 0, this.imageElement.image.width, this.imageElement.image.height, this.imageElement.offsetX, this.imageElement.offsetY, this.imageElement.canvas.width - 2 * this.imageElement.offsetX, this.imageElement.canvas.height - this.imageElement.offsetY);
+	
+	        this.imageElement.resizedImageOffset = {
+	          x: this.imageElement.offsetX * -1 * this.imageElement.resizedImageScale,
+	          y: this.imageElement.offsetY * -1 * this.imageElement.resizedImageScale
+	        };
+	
+	        if (this.backgroundFill === 'blue' || this.backgroundFill === 'rgba(0, 0, 255, 1)') {
+	          var dataSample = animationUtils.getSquareColorSample(this.imageElement.canvas, 10, new geometryUtils.Point(this.imageElement.canvas.width / 2, this.imageElement.offsetY));
+	          this.backgroundFill = dataSample;
+	          this.redrawBaseImage();
+	        }
+	      } else {
+	        this.imageElement.context.drawImage(this.imageElement.image, this.imageElement.offsetX, this.imageElement.offsetY, this.imageElement.subRect.width, this.imageElement.subRect.height, 0, 0, this.imageElement.canvas.width, this.imageElement.canvas.height);
+	        if (this.backgroundFill === 'blue' || this.backgroundFill === 'rgba(0, 0, 255, 1)') {
+	          var sampleOffset = 1;
+	          if (this.imageElement.resizedImageScale) {
+	            sampleOffset = this.imageElement.imageScale / this.imageElement.resizedImageScale;
+	          }
+	
+	          var _dataSample = animationUtils.getSquareColorSample(this.imageElement.canvas, 10, new geometryUtils.Point(Math.min(this.imageElement.canvas.width / 2, Math.abs(this.imageElement.offsetX)), Math.min(this.imageElement.offsetY, 0) * -1 * sampleOffset));
+	
+	          this.backgroundFill = _dataSample;
+	          this.redrawBaseImage();
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'loadImage',
+	    value: function loadImage(json, imgPath) {
+	      var _this = this;
+	
+	      this.imageElement.reinitFaces(json);
+	
+	      var image = new Image();
+	      image.src = imgPath || this.imgPath;
+	
+	      image.onload = function () {
+	        _this.imageElement.image = image;
+	        _this.imageElement.killAnimations();
+	        _this.setImageScale();
+	        _this.generateHexInfo();
+	        _this.cleanUpImage();
+	      };
+	    }
+	  }, {
+	    key: 'drawRect',
+	    value: function drawRect(topLeft, width, height) {
+	      var _this2 = this;
+	
+	      var alpha = arguments.length <= 3 || arguments[3] === undefined ? 1 : arguments[3];
+	
+	      this.imageElement.ifNotDrawing(function () {
+	        _this2.imageElement.context.clearRect(0, 0, _this2.imageElement.canvas.width, _this2.imageElement.canvas.height);
+	        _this2.imageElement.context.drawImage(_this2.imageElement.image, _this2.imageElement.offsetX, _this2.imageElement.offsetY, _this2.imageElement.width, _this2.imageElement.height, 0, 0, _this2.imageElement.canvas.width, _this2.imageElement.canvas.height);
+	        _this2.drawScrim(function () {
+	          var x = _this2.pointUtils.toGridCoords(topLeft.x, 'x');
+	          var y = _this2.pointUtils.toGridCoords(topLeft.y, 'y');
+	          var w = _this2.pointUtils.toGridCoords(width);
+	          var h = _this2.pointUtils.toGridCoords(height);
+	
+	          _this2.imageElement.context.strokeStyle = 'rgba(255, 255, 255, ' + alpha + ')';
+	          _this2.imageElement.context.lineWidth = 5;
+	          _this2.imageElement.context.strokeRect(x, y, w, h);
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'getSubRectDimension',
+	    value: function getSubRectDimension(image) {
+	      var width = this.imageElement.canvas.width;
+	      var height = this.imageElement.canvas.height;
+	
+	      var widthsRatio = this.imageElement.canvas.width / image.width;
+	      var heightsRatio = this.imageElement.canvas.height / image.height;
+	
+	      if (widthsRatio > heightsRatio) {
+	        width = image.width;
+	        height = this.imageElement.canvas.height / widthsRatio;
+	        this.imageElement.imageScale = 1 / widthsRatio;
+	      } else {
+	        height = image.height;
+	        width = this.imageElement.canvas.width / heightsRatio;
+	        this.imageElement.imageScale = 1 / heightsRatio;
+	      }
+	
+	      return { width: width, height: height };
+	    }
+	  }, {
+	    key: 'setImageScale',
+	    value: function setImageScale() {
+	      var image = arguments.length <= 0 || arguments[0] === undefined ? this.imageElement.image : arguments[0];
+	
+	      var widthsRatio = this.imageElement.canvas.width / image.width;
+	      var heightsRatio = this.imageElement.canvas.height / image.height;
+	
+	      if (widthsRatio > heightsRatio) {
+	        this.imageElement.imageScale = 1 / widthsRatio;
+	      } else {
+	        this.imageElement.imageScale = 1 / heightsRatio;
+	      }
+	    }
+	  }, {
+	    key: 'cleanUpImage',
+	    value: function cleanUpImage() {
+	      var _this3 = this;
+	
+	      this.resizeContent(function () {
+	        _this3.generateHexInfo();
+	        if (_this3.imageElement.readyCallback) {
+	          _this3.imageElement.readyCallback();
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'resizeContent',
+	    value: function resizeContent() {
+	      var callback = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+	
+	      var scaledMin = animationUtils.MIN_HEX_RADIUS * this.imageElement.canvas.height;
+	      var scaledMax = animationUtils.MAX_HEX_RADIUS * this.imageElement.canvas.height;
+	      var targetHexR = this.imageElement.hexR;
+	
+	      if (this.imageElement.hexR < scaledMin) {
+	        // make sure that we don't scale the image too much
+	        if (scaledMin - this.imageElement.hexR > this.imageElement.hexR * animationUtils.MAX_HEX_DIFF) {
+	          targetHexR = this.imageElement.hexR + this.imageElement.hexR * animationUtils.MAX_HEX_DIFF;
+	        } else {
+	          targetHexR = scaledMin;
+	        }
+	      } else if (this.imageElement.hexR > scaledMax) {
+	        if (this.imageElement.hexR - scaledMax > this.imageElement.hexR * animationUtils.MAX_HEX_DIFF) {
+	          targetHexR = this.imageElement.hexR - this.imageElement.hexR * animationUtils.MAX_HEX_DIFF;
+	        } else {
+	          targetHexR = scaledMax;
+	        }
+	      }
+	
+	      // work backwards.
+	      var targetFaceDiff = targetHexR;
+	      var currentFaceDiff = this.imageElement.faceBounds.right - this.imageElement.faceBounds.left;
+	      // 1. get target difference between left and right face edges.
+	      if (this.imageElement.faces.length === 1) {
+	        targetFaceDiff /= 2;
+	      }
+	      targetFaceDiff *= Math.sqrt(3);
+	      // 2. use this to calculate different, ideal image scale.
+	      var newImageScale = 1 / (targetFaceDiff / currentFaceDiff);
+	
+	      this.imageElement.subRect = {
+	        width: this.imageElement.canvas.width * newImageScale,
+	        height: this.imageElement.canvas.height * newImageScale
+	      };
+	
+	      if (this.imageElement.image.width < this.imageElement.subRect.width) {
+	        this.imageElement.subRect.width = this.imageElement.image.width;
+	        this.imageElement.subRect.height = this.imageElement.canvas.height / this.imageElement.canvas.width * this.imageElement.subRect.width;
+	      }
+	
+	      this.imageElement.width = this.imageElement.subRect.width;
+	      this.imageElement.height = this.imageElement.subRect.height;
+	      this.imageElement.resizedImageScale = this.imageElement.subRect.width / this.imageElement.canvas.width;
+	
+	      this.imageElement.offsetX = (this.imageElement.image.width - this.imageElement.subRect.width) / 2;
+	      this.imageElement.offsetY = (this.imageElement.image.height - this.imageElement.subRect.height) / 2;
+	
+	      this.imageElement.resizedImageOffset = {
+	        x: this.imageElement.offsetX,
+	        y: this.imageElement.offsetY
+	      };
+	
+	      this.redrawBaseImage();
+	
+	      if (callback) {
+	        callback();
+	      }
+	    }
+	  }, {
+	    key: 'generateHexInfo',
+	    value: function generateHexInfo() {
+	      this.imageElement.hexR = this.createHexR();
+	      this.imageElement.hexVertices = this.createHexVertices(this.imageElement.hexR);
+	    }
+	  }, {
+	    key: 'createHexR',
+	    value: function createHexR() {
+	      var r = 1;
+	      var baseDistance = geometryUtils.distanceFromCoords(new geometryUtils.Point(this.imageElement.faceBounds.left, this.imageElement.faceBounds.bottom), new geometryUtils.Point(this.imageElement.faceBounds.right, this.imageElement.faceBounds.top));
+	
+	      if (this.imageElement.resizedImageScale) {
+	        r = baseDistance / this.imageElement.resizedImageScale / Math.sqrt(3);
+	      } else {
+	        r = this.pointUtils.toGridCoords(baseDistance) / Math.sqrt(3);
+	      }
+	
+	      if (this.imageElement.facesAndEmotions.length === 1) {
+	        r *= 1.5;
+	      }
+	
+	      return r;
+	    }
+	  }, {
+	    key: 'createHexVertices',
+	    value: function createHexVertices() {
+	      var radius = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	
+	      return geometryUtils.createRoundedHexagon(radius, radius / 6);
+	    }
+	  }, {
+	    key: 'cutOutHex',
+	    value: function cutOutHex() {
+	      var _this4 = this;
+	
+	      var closePath = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+	
+	      this.imageElement.context.save();
+	
+	      this.imageElement.context.beginPath();
+	      if (closePath) {
+	        this.imageElement.context.moveTo(0, 0);
+	        this.imageElement.context.lineTo(this.imageElement.canvas.width, 0);
+	        this.imageElement.context.lineTo(this.imageElement.canvas.width, this.imageElement.canvas.height);
+	        this.imageElement.context.lineTo(0, this.imageElement.canvas.height);
+	        this.imageElement.context.lineTo(0, 0);
+	      }
+	
+	      this.imageElement.context.translate(this.imageElement.eyesMidpoint.x, this.imageElement.eyesMidpoint.y);
+	      this.imageElement.context.rotate(0);
+	
+	      this.imageElement.hexVertices.forEach(function (vertex, i, vertices) {
+	        if (i === 0) {
+	          _this4.imageElement.context.moveTo(vertex.x, vertex.y);
+	          return;
+	        }
+	        if (i % 2 === 0) {
+	          _this4.imageElement.context.lineTo(vertex.x, vertex.y);
+	        } else {
+	          var prev = i === 0 ? vertices[vertices.length - 1] : vertices[i - 1];
+	          var xMid = (vertex.x + prev.x) / 2;
+	          var yMid = (vertex.y + prev.y) / 2;
+	          var r = geometryUtils.distanceFromCoords(prev, vertex) / 2;
+	
+	          var bigIndex = Math.floor(i / 2);
+	          if ([5].includes(bigIndex)) {
+	            xMid -= r * (Math.sqrt(3) / 3);
+	          } else if ([2, 3].includes(bigIndex)) {
+	            xMid += r * (Math.sqrt(3) / 3);
+	          } else if ([4].includes(bigIndex)) {
+	            xMid += r * (Math.sqrt(2) / 4);
+	          } else if ([1].includes(bigIndex)) {
+	            xMid -= r * (Math.sqrt(2) / 4);
+	          } else if ([0].includes(bigIndex)) {
+	            xMid -= r * (Math.sqrt(3) / 3);
+	          }
+	
+	          if ([1, 2].includes(bigIndex)) {
+	            yMid += r / 2;
+	          } else if ([4, 5].includes(bigIndex)) {
+	            yMid -= r / 2;
+	          }
+	
+	          var startAngle = (30 + bigIndex * -1 * 60 + 360) % 360;
+	          var endAngle = (startAngle - 60 + 360) % 360;
+	
+	          _this4.imageElement.context.arc(xMid, yMid, r, startAngle / 360 * (Math.PI * 2), endAngle / 360 * (Math.PI * 2), true);
+	        }
+	      });
+	
+	      if (closePath) {
+	        this.imageElement.context.closePath();
+	      }
+	      this.imageElement.context.restore();
+	    }
+	  }, {
+	    key: 'fillBackground',
+	    value: function fillBackground() {
+	      this.imageElement.context.fillStyle = this.backgroundFill;
+	      this.imageElement.context.globalAlpha = 1;
+	      this.imageElement.context.globalCompositeOperation = 'source-over';
+	      this.imageElement.context.fillRect(0, 0, this.imageElement.canvas.width, this.imageElement.canvas.height);
+	    }
+	  }, {
+	    key: 'drawBackgroundWithAlpha',
+	    value: function drawBackgroundWithAlpha() {
+	      var alpha = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	
+	      this.imageElement.context.save();
+	
+	      this.imageElement.context.fillStyle = this.imageElement.treatments.treatment.noEmotionScrim ? colorUtils.subAlpha(colorUtils.NEUTRAL, 0.25) : this.imageElement.treatments.treatment.background;
+	      this.imageElement.context.globalCompositeOperation = 'multiply';
+	      this.imageElement.context.globalAlpha = alpha;
+	
+	      this.imageElement.context.fill();
+	      this.imageElement.context.restore();
+	    }
+	  }, {
+	    key: 'drawVignetteWithAlpha',
+	    value: function drawVignetteWithAlpha() {
+	      var alpha = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	
+	      this.imageElement.context.save();
+	
+	      this.imageElement.context.fillStyle = this.vignettePattern;
+	      this.imageElement.context.globalCompositeOperation = 'overlay';
+	      this.imageElement.context.globalAlpha = alpha;
+	      this.imageElement.context.fill();
+	      this.imageElement.context.restore();
+	    }
+	  }, {
+	    key: 'applyFill',
+	    value: function applyFill(fill) {
+	      this.imageElement.isDrawing = false;
+	      this.imageElement.context.fillStyle = fill.style;
+	      this.imageElement.context.globalCompositeOperation = fill.comp || 'source-over';
+	      this.imageElement.context.globalAlpha = fill.alpha || 1;
+	
+	      this.imageElement.context.fillRect(0, 0, this.imageElement.canvas.width, this.imageElement.canvas.height);
+	
+	      this.imageElement.context.globalCompositeOperation = 'source-over';
+	      this.imageElement.context.globalAlpha = 1;
+	      this.imageElement.isDrawing = false;
+	    }
+	  }, {
+	    key: 'createSimpleGradient',
+	    value: function createSimpleGradient() {
+	      var centerColor = arguments.length <= 0 || arguments[0] === undefined ? colorUtils.WHITE : arguments[0];
+	      var edgeColor = arguments.length <= 1 || arguments[1] === undefined ? colorUtils.BLACK : arguments[1];
+	      var radiusFactor = arguments.length <= 2 || arguments[2] === undefined ? 1 : arguments[2];
+	      var centered = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
+	      var colorstop1 = arguments.length <= 4 || arguments[4] === undefined ? 0 : arguments[4];
+	      var colorstop2 = arguments.length <= 5 || arguments[5] === undefined ? 1 : arguments[5];
+	
+	      var x = centered ? this.imageElement.canvas.width / 2 : this.imageElement.eyesMidpoint.x;
+	      var y = centered ? this.imageElement.canvas.height / 2 : this.imageElement.eyesMidpoint.y;
+	
+	      var gradient = this.imageElement.context.createRadialGradient(x, y, 0, x, y, this.imageElement.canvas.height * (radiusFactor || 1));
+	
+	      gradient.addColorStop(colorstop1, centerColor);
+	      gradient.addColorStop(colorstop2, edgeColor);
+	
+	      return gradient;
+	    }
+	  }]);
+	
+	  return CanvasUtils;
+	}();
+	
+	exports.default = CanvasUtils;
+
+/***/ },
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -5560,7 +6137,342 @@
 	}
 
 /***/ },
-/* 17 */
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* global require */
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _animationUtils = __webpack_require__(9);
+	
+	var animationUtils = _interopRequireWildcard(_animationUtils);
+	
+	var _geometryUtils = __webpack_require__(8);
+	
+	var geometryUtils = _interopRequireWildcard(_geometryUtils);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Timeline = __webpack_require__(13);
+	
+	var PointUtils = function () {
+	  function PointUtils(imageElement) {
+	    _classCallCheck(this, PointUtils);
+	
+	    this.imageElement = imageElement;
+	  }
+	
+	  _createClass(PointUtils, [{
+	    key: 'drawPointsWithAnim',
+	    value: function drawPointsWithAnim(points, duration) {
+	      var _this = this;
+	
+	      var timeline = new Timeline({
+	        onComplete: function onComplete() {
+	          _this.imageElement.killTimeline(timeline);
+	        }
+	      });
+	
+	      var active = null;
+	      var prog = 0;
+	      timeline.to(this.imageElement.canvas, animationUtils.POINTS_FADE_DURATION, {
+	        onStart: function onStart() {
+	          active = timeline.getActive()[0];
+	          _this.imageElement.tweens.push(active);
+	        },
+	        onUpdate: function onUpdate() {
+	          prog = active.progress();
+	          _this.drawPoints(points, prog);
+	        },
+	        onComplete: function onComplete() {
+	          _this.imageElement.killTween(active);
+	        }
+	      });
+	      timeline.to(this.imageElement.canvas, duration - animationUtils.POINTS_FADE_DURATION * 2, {
+	        onStart: function onStart() {
+	          active = timeline.getActive()[0];
+	          _this.imageElement.tweens.push(active);
+	        },
+	        onUpdate: function onUpdate() {
+	          _this.drawPoints(points);
+	        },
+	        onComplete: function onComplete() {
+	          _this.imageElement.killTween(active);
+	        }
+	      });
+	      timeline.to(this.imageElement.canvas, animationUtils.POINTS_FADE_DURATION, {
+	        onStart: function onStart() {
+	          active = timeline.getActive()[0];
+	          _this.imageElement.tweens.push(active);
+	        },
+	        onUpdate: function onUpdate() {
+	          prog = active.progress();
+	          _this.drawPoints(points, 1 - prog);
+	        },
+	        onComplete: function onComplete() {
+	          _this.imageElement.killTween(active);
+	        }
+	      });
+	
+	      this.imageElement.timelines.push(timeline);
+	    }
+	  }, {
+	    key: 'drawPoints',
+	    value: function drawPoints() {
+	      var _this2 = this;
+	
+	      var points = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	      var alpha = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
+	
+	      if (points.length === 0) {
+	        return;
+	      }
+	
+	      this.imageElement.ifNotDrawing(function () {
+	        _this2.imageElement.context.clearRect(0, 0, _this2.imageElement.canvas.width, _this2.imageElement.canvas.height);
+	        _this2.imageElement.context.drawImage(_this2.imageElement.image, _this2.imageElement.offsetX, _this2.imageElement.offsetY, _this2.width, _this2.height, 0, 0, _this2.imageElement.canvas.width, _this2.imageElement.canvas.height);
+	        _this2.imageElement.canvasUtils.drawScrim(function () {
+	          points.forEach(function (point, index) {
+	            _this2.drawPoint(point, alpha, index === points.length - 1);
+	          });
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'pointToGridCoords',
+	    value: function pointToGridCoords() {
+	      var point = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+	
+	      if (!point) {
+	        return new geometryUtils.Point(0, 0);
+	      }
+	
+	      return new geometryUtils.Point(this.toGridCoords(point.x, 'x'), this.toGridCoords(point.y, 'y'));
+	    }
+	  }, {
+	    key: 'drawPoint',
+	    value: function drawPoint(point) {
+	      var alpha = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
+	      var isLast = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+	
+	      this.imageElement.isDrawing = false;
+	
+	      var x = this.toGridCoords(point.position.x, 'x');
+	      var y = this.toGridCoords(point.position.y, 'y');
+	
+	      this.imageElement.context.beginPath();
+	      this.imageElement.context.fillStyle = 'rgba(255, 255, 255, ' + alpha + ')';
+	      this.imageElement.context.arc(x, y, 3, 0, Math.PI * 2);
+	      this.imageElement.context.fill();
+	      this.imageElement.context.closePath();
+	
+	      if (isLast) {
+	        this.imageElement.isDrawing = false;
+	      }
+	    }
+	  }, {
+	    key: 'toGridCoords',
+	    value: function toGridCoords() {
+	      var value = arguments.length <= 0 || arguments[0] === undefined ? this.imageElement.canvas.width : arguments[0];
+	      var axis = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+	
+	      var offset = 0;
+	      if (axis === 'x') {
+	        if (this.imageElement.offsetX === 0 && this.imageElement.resizedImageOffset) {
+	          offset = this.imageElement.resizedImageOffset.x;
+	        } else {
+	          offset = this.imageElement.offsetX;
+	        }
+	      } else if (axis === 'y') {
+	        if (this.imageElement.offsetY === 0 && this.imageElement.resizedImageOffset) {
+	          offset = this.imageElement.resizedImageOffset.y;
+	        } else {
+	          offset = this.imageElement.offsetY;
+	        }
+	      }
+	
+	      // this.imageElement.resizedImageOffset
+	      // this.imageElement.imageScale
+	
+	
+	      return (value - offset) / this.imageElement.imageScale;
+	    }
+	  }]);
+	
+	  return PointUtils;
+	}();
+	
+	exports.default = PointUtils;
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* global require */
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _utils = __webpack_require__(20);
+	
+	var utils = _interopRequireWildcard(_utils);
+	
+	var _geometryUtils = __webpack_require__(8);
+	
+	var geometryUtils = _interopRequireWildcard(_geometryUtils);
+	
+	var _canvasUtils = __webpack_require__(16);
+	
+	var _canvasUtils2 = _interopRequireDefault(_canvasUtils);
+	
+	var _pointUtils = __webpack_require__(18);
+	
+	var _pointUtils2 = _interopRequireDefault(_pointUtils);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Tween = __webpack_require__(11);
+	
+	var ZoomStep = function () {
+	  function ZoomStep(imageElement, canvas, context) {
+	    _classCallCheck(this, ZoomStep);
+	
+	    this.imageElement = imageElement;
+	    this.canvas = canvas;
+	    this.context = context;
+	    this.canvasUtils = new _canvasUtils2.default(imageElement, canvas, context);
+	    this.pointUtils = new _pointUtils2.default(imageElement);
+	  }
+	
+	  _createClass(ZoomStep, [{
+	    key: 'zoom',
+	    value: function zoom() {
+	      var _this = this;
+	
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	      var zoomOut = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+	
+	      var topLeft = new geometryUtils.Point(utils.thisOrZero(this.imageElement.json[this.imageElement.currFace].boundingPoly.vertices[0].x), utils.thisOrZero(this.imageElement.json[this.imageElement.currFace].boundingPoly.vertices[0].y));
+	
+	      var width = Math.abs(topLeft.x - utils.thisOrZero(this.imageElement.json[this.imageElement.currFace].boundingPoly.vertices[1].x));
+	      width += geometryUtils.createPadding(width);
+	
+	      var height = Math.abs(topLeft.y - utils.thisOrZero(this.imageElement.json[this.imageElement.currFace].boundingPoly.vertices[2].y));
+	      height += geometryUtils.createPadding(height);
+	
+	      var centerX = topLeft.x + width / 2;
+	      var centerY = topLeft.y + height / 2;
+	
+	      if (height > width) {
+	        width = this.canvas.width / this.canvas.height * height;
+	      } else {
+	        height = this.canvas.height / this.canvas.width * width;
+	      }
+	
+	      var targetLeft = Math.max(centerX - width / 2, 0);
+	      var targetTop = Math.max(centerY - height / 2, 0);
+	
+	      if (zoomOut) {
+	        width = this.imageElement.subRect.width;
+	        height = this.imageElement.subRect.height;
+	
+	        targetLeft = this.imageElement.resizedImageOffset ? this.imageElement.resizedImageOffset.x : 0;
+	        targetTop = this.imageElement.resizedImageOffset ? this.imageElement.resizedImageOffset.y : 0;
+	      }
+	
+	      if (duration === 0) {
+	        this.imageElement.ifNotDrawing(function () {
+	          _this.imageElement.isDrawing = false;
+	
+	          _this.context.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
+	
+	          _this.canvasUtils.fillBackground();
+	
+	          _this.context.drawImage(_this.imageElement.image, targetLeft, targetTop, _this.imageElement.width, _this.imageElement.height, 0, 0, _this.canvas.width, _this.canvas.height);
+	          _this.imageElement.offsetX = targetLeft;
+	          _this.imageElement.offsetY = targetTop;
+	          _this.imageElement.width = width;
+	          _this.imageElement.height = height;
+	          _this.imageElement.imageScale = width / _this.canvas.width;
+	          if (zoomOut) {
+	            _this.imageElement.eyesMidpoint = _this.pointUtils.pointToGridCoords(_this.imageElement.allEyesCenter);
+	          } else {
+	            _this.imageElement.eyesMidpoint = _this.pointUtils.pointToGridCoords(_this.imageElement.eyeMidpoints[_this.imageElement.currFace]);
+	          }
+	
+	          _this.imageElement.canvasSnapshot = _this.context.createPattern(_this.canvas, 'no-repeat');
+	
+	          _this.imageElement.isDrawing = false;
+	        });
+	      } else {
+	        (function () {
+	          var tween = Tween.to(_this.canvas, duration, {
+	            onStart: function onStart() {
+	              _this.imageElement.isDrawing = false;
+	              _this.imageElement.tweens.push(tween);
+	            },
+	            onUpdate: function onUpdate() {
+	              var prog = tween.progress();
+	              var currX = _this.imageElement.offsetX - (_this.imageElement.offsetX - targetLeft) * prog;
+	              var currY = _this.imageElement.offsetY - (_this.imageElement.offsetY - targetTop) * prog;
+	
+	              var currWidth = _this.imageElement.width - (_this.imageElement.width - width) * prog;
+	              var currHeight = _this.imageElement.height - (_this.imageElement.height - height) * prog;
+	
+	              _this.context.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
+	
+	              _this.canvasUtils.fillBackground();
+	
+	              _this.context.drawImage(_this.imageElement.image, currX, currY, currWidth, currHeight, 0, 0, _this.canvas.width, _this.canvas.height);
+	            },
+	            onComplete: function onComplete() {
+	              _this.imageElement.offsetX = targetLeft;
+	              _this.imageElement.offsetY = targetTop;
+	              _this.imageElement.width = width;
+	              _this.imageElement.height = height;
+	              _this.imageElement.imageScale = width / _this.canvas.width;
+	              if (zoomOut) {
+	                _this.imageElement.eyesMidpoint = _this.pointUtils.pointToGridCoords(_this.imageElement.allEyesCenter);
+	              } else {
+	                _this.imageElement.eyesMidpoint = _this.pointUtils.pointToGridCoords(_this.imageElement.eyeMidpoints[_this.imageElement.currFace]);
+	              }
+	              _this.imageElement.killTween(tween);
+	
+	              _this.imageElement.isDrawing = false;
+	              _this.imageElement.canvasSnapshot = _this.context.createPattern(_this.canvas, 'no-repeat');
+	            }
+	          });
+	          _this.imageElement.tweens.push(tween);
+	        })();
+	      }
+	    }
+	  }]);
+	
+	  return ZoomStep;
+	}();
+	
+	exports.default = ZoomStep;
+
+/***/ },
+/* 20 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -5601,7 +6513,1249 @@
 	}
 
 /***/ },
-/* 18 */
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* global require */
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _canvasUtils = __webpack_require__(16);
+	
+	var _canvasUtils2 = _interopRequireDefault(_canvasUtils);
+	
+	var _animationUtils = __webpack_require__(9);
+	
+	var animationUtils = _interopRequireWildcard(_animationUtils);
+	
+	var _faceUtils = __webpack_require__(6);
+	
+	var faceUtils = _interopRequireWildcard(_faceUtils);
+	
+	var _pointUtils = __webpack_require__(18);
+	
+	var _pointUtils2 = _interopRequireDefault(_pointUtils);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Timeline = __webpack_require__(13);
+	
+	var FaceStep = function () {
+	  function FaceStep(imageElement, canvas, context) {
+	    _classCallCheck(this, FaceStep);
+	
+	    this.imageElement = imageElement;
+	    this.canvas = canvas;
+	    this.context = context;
+	
+	    this.canvasUtils = new _canvasUtils2.default(imageElement, canvas, context);
+	    this.pointUtils = new _pointUtils2.default(imageElement);
+	  }
+	
+	  _createClass(FaceStep, [{
+	    key: 'ears',
+	    value: function ears() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.pointUtils.drawPointsWithAnim(this.imageElement.filterLandmarks(faceUtils.LANDMARK_SECTIONS.EARS), duration);
+	    }
+	  }, {
+	    key: 'forehead',
+	    value: function forehead() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.pointUtils.drawPointsWithAnim(this.imageElement.filterLandmarks(faceUtils.LANDMARK_SECTIONS.FOREHEAD), duration);
+	    }
+	  }, {
+	    key: 'nose',
+	    value: function nose() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.pointUtils.drawPointsWithAnim(this.imageElement.filterLandmarks(faceUtils.LANDMARK_SECTIONS.NOSE), duration);
+	    }
+	  }, {
+	    key: 'mouth',
+	    value: function mouth() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.pointUtils.drawPointsWithAnim(this.imageElement.filterLandmarks(faceUtils.LANDMARK_SECTIONS.MOUTH), duration);
+	    }
+	  }, {
+	    key: 'chin',
+	    value: function chin() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.pointUtils.drawPointsWithAnim(this.imageElement.filterLandmarks(faceUtils.LANDMARK_SECTIONS.CHIN), duration);
+	    }
+	  }, {
+	    key: 'eyes',
+	    value: function eyes() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.pointUtils.drawPointsWithAnim(this.imageElement.filterLandmarks(faceUtils.LANDMARK_SECTIONS.EYES), duration);
+	    }
+	  }, {
+	    key: 'face',
+	    value: function face() {
+	      var _this = this;
+	
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 3 : arguments[0];
+	
+	      var boundingPoly = this.imageElement.json[this.imageElement.currFace].fdBoundingPoly;
+	      var topLeft = boundingPoly.vertices[0];
+	      var width = Math.abs(topLeft.x - boundingPoly.vertices[1].x);
+	      var height = Math.abs(topLeft.y - boundingPoly.vertices[2].y);
+	
+	      var timeline = new Timeline({
+	        onComplete: function onComplete() {
+	          _this.imageElement.killTimeline(timeline);
+	        }
+	      });
+	      var active = null;
+	      var prog = 0;
+	
+	      timeline.to(this.canvas, animationUtils.POINTS_FADE_DURATION, {
+	        onStart: function onStart() {
+	          _this.imageElementscrimAlpha = 1;
+	          _this.context.globalAlpha = 1;
+	          _this.context.globalCompositeOperation = 'source-over';
+	          active = timeline.getActive()[0];
+	          _this.imageElement.tweens.push(active);
+	        },
+	        onUpdate: function onUpdate() {
+	          prog = active.progress();
+	          _this.imageElementisDrawing = false;
+	          _this.canvasUtils.drawRect(topLeft, width, height, prog);
+	        },
+	        onComplete: function onComplete() {
+	          _this.imageElement.killTween(active);
+	        }
+	      });
+	      timeline.to(this.canvas, duration - animationUtils.POINTS_FADE_DURATION * 2, {
+	        onStart: function onStart() {
+	          _this.canvasUtils.drawRect(topLeft, width, height, 1);
+	        }
+	      });
+	      timeline.to(this.canvas, animationUtils.POINTS_FADE_DURATION, {
+	        onStart: function onStart() {
+	          active = timeline.getActive()[0];
+	          _this.imageElement.tweens.push(active);
+	        },
+	        onUpdate: function onUpdate() {
+	          prog = active.progress();
+	          _this.canvasUtils.drawRect(topLeft, width, height, 1 - prog);
+	        },
+	        onComplete: function onComplete() {
+	          _this.imageElement.killTween(active);
+	        }
+	      });
+	
+	      this.imageElement.timelines.push(timeline);
+	    }
+	  }, {
+	    key: 'allFeatures',
+	    value: function allFeatures() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      if (!this.imageElementisDrawing) {
+	        this.pointUtils.drawPointsWithAnim(this.imageElement.filterLandmarks(faceUtils.LANDMARK_SECTIONS.FULL), duration);
+	      }
+	    }
+	  }]);
+	
+	  return FaceStep;
+	}();
+	
+	exports.default = FaceStep;
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* global require */
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+	
+	var _easings = __webpack_require__(17);
+	
+	var ease = _interopRequireWildcard(_easings);
+	
+	var _canvasUtils = __webpack_require__(16);
+	
+	var _canvasUtils2 = _interopRequireDefault(_canvasUtils);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Timeline = __webpack_require__(13);
+	
+	var EmotionStep = function () {
+	  function EmotionStep(imageElement, canvas, context, duration) {
+	    _classCallCheck(this, EmotionStep);
+	
+	    this.imageElement = imageElement;
+	    this.canvas = canvas;
+	    this.context = context;
+	
+	    this.canvasUtils = new _canvasUtils2.default(imageElement, canvas, context);
+	
+	    this.emotion(duration);
+	  }
+	
+	  _createClass(EmotionStep, [{
+	    key: 'emotion',
+	    value: function emotion(duration) {
+	      var _this = this;
+	
+	      this.imageElement.ntscrimAlpha = 0;
+	
+	      this.imageElement.ifNotDrawing(function () {
+	        _this.canvasUtils.drawScrim();
+	        if (_this.imageElement.faces.length > 1) {
+	          _this.personalColor(duration);
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'personalColor',
+	    value: function personalColor() {
+	      var _this2 = this;
+	
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	
+	      var fillColors = this.imageElement.treatments.personalAuraColors[this.imageElement.currFace];
+	      this.imageElement.fills = [];
+	
+	      // maybe have scrim pulse instead of just drawing?
+	      if (fillColors.length === 1) {
+	        this.canvasUtils.applyFill({
+	          style: fillColors[0],
+	          comp: 'multiply',
+	          alpha: 0.35
+	        });
+	        this.canvasUtils.redrawCurrentCanvas();
+	      } else {
+	        (function () {
+	          var colorTimeline = new Timeline({
+	            onStart: function onStart() {
+	              _this2.imageElement.timelines.push(colorTimeline);
+	            },
+	            onComplete: function onComplete() {
+	              _get(Object.getPrototypeOf(EmotionStep.prototype), 'killTimeline', _this2).call(_this2, colorTimeline);
+	            }
+	          });
+	
+	          var active = null;
+	          var gradient = null;
+	
+	          colorTimeline.to(_this2.canvas, duration * 0.75, {
+	            onStart: function onStart() {
+	              active = colorTimeline.getActive()[0];
+	              _this2.imageElement.tweens.push(active);
+	            },
+	            onUpdate: function onUpdate() {
+	              _this2.canvasUtils.redrawCurrentCanvas();
+	
+	              var progress = active.progress();
+	              var opacity = ease.expOut(0.5, 1, progress);
+	              var radius = ease.expOut(0, 1, progress);
+	
+	              gradient = _this2.canvasUtils.createSimpleGradient(fillColors[0], fillColors[1], radius);
+	
+	              _this2.canvasUtils.applyFill({
+	                style: gradient,
+	                comp: 'screen',
+	                alpha: opacity
+	              });
+	            },
+	            onComplete: function onComplete() {
+	              _get(Object.getPrototypeOf(EmotionStep.prototype), 'killTween', _this2).call(_this2, active);
+	            }
+	          });
+	          colorTimeline.to(_this2.canvas, duration * 0.25, {
+	            onStart: function onStart() {
+	              active = colorTimeline.getActive()[0];
+	              _this2.canvasUtils.redrawCurrentCanvas();
+	
+	              _this2.canvasUtils.applyFill({
+	                style: gradient,
+	                comp: 'screen',
+	                alpha: 1
+	              });
+	
+	              _this2.imageElement.tweens.push(active);
+	            },
+	            onUpdate: function onUpdate() {
+	              var progress = active.progress();
+	              var opacity = ease.square(1, 0, progress);
+	
+	              _this2.canvasUtils.redrawCurrentCanvas();
+	
+	              _this2.canvasUtils.applyFill({
+	                style: gradient,
+	                comp: 'screen',
+	                alpha: opacity
+	              });
+	            },
+	            onComplete: function onComplete() {
+	              _this2.canvasUtils.redrawCurrentCanvas();
+	              _this2.imageElement.isDrawing = false;
+	              _this2.imageElement.super.killTween(active);
+	            }
+	          });
+	        })();
+	      }
+	    }
+	  }]);
+	
+	  return EmotionStep;
+	}();
+	
+	exports.default = EmotionStep;
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* global require, single */
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _easings = __webpack_require__(17);
+	
+	var ease = _interopRequireWildcard(_easings);
+	
+	var _animationUtils = __webpack_require__(9);
+	
+	var animationUtils = _interopRequireWildcard(_animationUtils);
+	
+	var _colorUtils = __webpack_require__(10);
+	
+	var colorUtils = _interopRequireWildcard(_colorUtils);
+	
+	var _pointUtils = __webpack_require__(18);
+	
+	var _pointUtils2 = _interopRequireDefault(_pointUtils);
+	
+	var _canvasUtils = __webpack_require__(16);
+	
+	var _canvasUtils2 = _interopRequireDefault(_canvasUtils);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Timeline = __webpack_require__(13);
+	
+	var MultiAuraStep = function () {
+	  function MultiAuraStep(imageElement, canvas, context, duration) {
+	    _classCallCheck(this, MultiAuraStep);
+	
+	    this.imageElement = imageElement;
+	    this.canvas = canvas;
+	    this.context = context;
+	    this.pointUtils = new _pointUtils2.default(imageElement);
+	    this.canvasUtils = new _canvasUtils2.default(imageElement, canvas, context);
+	
+	    this.animateInMultiAura(duration);
+	  }
+	
+	  _createClass(MultiAuraStep, [{
+	    key: 'fillInFeatheredCircle',
+	    value: function fillInFeatheredCircle(pattern, radius, feather) {
+	      var reverse = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
+	      var centered = arguments.length <= 4 || arguments[4] === undefined ? false : arguments[4];
+	
+	      var tempCanvas = this.canvasUtils.createHiDPICanvas();
+	      tempCanvas.width = this.canvas.width;
+	      tempCanvas.height = this.canvas.height;
+	      var tempContext = tempCanvas.getContext('2d');
+	      animationUtils.setSmoothing(tempContext);
+	
+	      var x = centered ? this.canvas.width / 2 : this.imageElement.eyesMidpoint.x;
+	      var y = centered ? this.canvas.height / 2 : this.imageElement.eyesMidpoint.y;
+	
+	      var gradient = tempContext.createRadialGradient(x, y, 0, x, y, radius);
+	
+	      gradient.addColorStop(1 - feather / radius, reverse ? colorUtils.TRANSPARENT : colorUtils.BLACK);
+	      gradient.addColorStop(1, reverse ? colorUtils.BLACK : colorUtils.TRANSPARENT);
+	
+	      tempContext.fillStyle = gradient;
+	      tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+	
+	      tempContext.fillStyle = pattern;
+	      tempContext.globalCompositeOperation = 'source-in';
+	      tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+	
+	      var canvasPattern = tempContext.createPattern(tempCanvas, 'no-repeat');
+	
+	      return canvasPattern;
+	    }
+	  }, {
+	    key: 'animateInMultiAuraFrame',
+	    value: function animateInMultiAuraFrame() {
+	      var progress = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	      var startR = arguments.length <= 1 || arguments[1] === undefined ? this.canvas.width : arguments[1];
+	      var fill = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+	      var comp = arguments.length <= 3 || arguments[3] === undefined ? animationUtils.BLEND_NORMAL : arguments[3];
+	
+	      if (!fill) {
+	        return;
+	      }
+	
+	      this.imageElement.isDrawing = true;
+	
+	      var feather = ease.linear(0, startR, progress);
+	
+	      this.canvasUtils.redrawBaseImage();
+	
+	      this.context.fillStyle = this.fillInFeatheredCircle(fill, startR, feather);
+	      this.context.globalAlpha = ease.expOut(0.4, 1, progress);
+	      this.context.globalCompositeOperation = comp;
+	
+	      this.canvasUtils.cutOutHex();
+	
+	      this.context.fill();
+	
+	      this.context.fillStyle = this.fillInFeatheredCircle(fill, ease.expOut(this.imageElement.hexR * 0.75, this.imageElement.hexR * 1.25, progress), ease.exp(this.imageElement.hexR * 0.25, this.imageElement.hexR * 0.75, progress));
+	
+	      this.context.globalAlpha = ease.exp(0.3, 0.7, progress);
+	
+	      this.context.globalCompositeOperation = 'screen';
+	      this.context.fill();
+	
+	      this.context.globalCompositeOperation = 'color-burn';
+	      this.context.fill();
+	
+	      this.context.fillStyle = this.fillInFeatheredCircle(fill, ease.expOut(this.canvas.height * 2, this.canvas.height, progress), ease.exp(this.canvas.height, this.canvas.height - this.imageElement.hexR / 2, progress), true, false);
+	
+	      this.context.globalAlpha = ease.exp(0, 0.6, progress);
+	
+	      this.context.globalCompositeOperation = 'multiply';
+	      this.context.fill();
+	
+	      this.context.fillStyle = this.fillInFeatheredCircle(colorUtils.BLACK, this.canvas.height, this.canvas.height / 6, true, true);
+	      this.context.globalAlpha = ease.exp(0, 0.05, progress);
+	      this.context.globalCompositeOperation = 'source-over';
+	      this.context.fill();
+	
+	      this.context.fillStyle = this.fillInFeatheredCircle(fill, this.canvas.height * 1.2, this.canvas.height / 5, true, true);
+	      this.context.globalAlpha = ease.exp(0, 1, progress);
+	      this.context.globalCompositeOperation = 'hard-light';
+	      this.context.fill();
+	
+	      this.imageElement.isDrawing = false;
+	    }
+	  }, {
+	    key: 'animateInMultiAura',
+	    value: function animateInMultiAura() {
+	      var _this = this;
+	
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	
+	      var fill = null;
+	      var comp = this.imageElement.treatments.groupAuraColors.length > 0 ? 'screen' : 'lighten';
+	      var startR = this.pointUtils.toGridCoords(this.imageElement.faceBounds.right - this.imageElement.faceBounds.left) / 2;
+	
+	      if (duration === 0) {
+	        this.imageElement.ifNotDrawing(function () {
+	          _this.animateInMultiAuraFrame(1, _this.canvas.width, _this.getMultiAuraFill(), comp);
+	        });
+	      } else {
+	        (function () {
+	          var active = null;
+	
+	          var auraTimeline = new Timeline({
+	            onStart: function onStart() {
+	              _this.imageElement.timelines.push(auraTimeline);
+	            },
+	            onComplete: function onComplete() {
+	              _this.imageElement.killTimeline(auraTimeline);
+	            }
+	          });
+	          auraTimeline.to(_this.canvas, duration, {
+	            onStart: function onStart() {
+	              active = auraTimeline.getActive()[0];
+	              fill = _this.getMultiAuraFill();
+	              _this.imageElement.fills = [fill];
+	              _this.imageElement.isDrawing = false;
+	              _this.imageElement.tweens.push(active);
+	            },
+	            onUpdate: function onUpdate() {
+	              var progress = active.progress();
+	              var r = ease.exp(startR, _this.canvas.width, progress);
+	
+	              _this.animateInMultiAuraFrame(progress, r, _this.imageElement.fills[0], comp);
+	            },
+	            onComplete: function onComplete() {
+	              _this.imageElement.killTween(active);
+	            }
+	          });
+	        })();
+	      }
+	    }
+	  }, {
+	    key: 'getMultiAuraFill',
+	    value: function getMultiAuraFill() {
+	      var tempCanvas = this.canvasUtils.createHiDPICanvas(this.imageElement.canvasWidth, this.imageElement.canvasHeight);
+	      tempCanvas.width = this.imageElement.canvasWidth;
+	      tempCanvas.height = this.imageElement.canvasHeight;
+	      var tempContext = tempCanvas.getContext('2d');
+	      animationUtils.setSmoothing(tempContext);
+	
+	      var gradientColors = this.imageElement.treatments.groupAuraColors;
+	
+	      // no one in the group shows any emotion
+	      if (gradientColors.length === 0) {
+	        tempContext.save();
+	        tempContext.fillStyle = colorUtils.subAlpha(colorUtils.NEUTRAL, 0.35);
+	        tempContext.globalAlpha = 1;
+	        tempContext.globalCompositeOperation = 'source-over';
+	
+	        tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+	
+	        var solidPattern = tempContext.createPattern(tempCanvas, 'no-repeat');
+	
+	        tempContext.restore();
+	
+	        return solidPattern;
+	      } else if (gradientColors.length === 1) {
+	        // only one emotion in the entire group
+	        var gradient = this.canvasUtils.createSimpleGradient(gradientColors[0], colorUtils.subAlpha(gradientColors[0], 0.2));
+	
+	        tempContext.save();
+	        tempContext.fillStyle = gradient;
+	        tempContext.globalAlpha = 1;
+	        tempContext.globalCompositeOperation = 'source-over';
+	
+	        tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+	
+	        var _gradientPattern = tempContext.createPattern(tempCanvas, 'no-repeat');
+	
+	        tempContext.restore();
+	
+	        return _gradientPattern;
+	      }
+	
+	      tempContext.save();
+	      // get total number of emotions to display, and then tween between their colors, degree by degree
+	      var degBetweenColors = 360 / gradientColors.length;
+	      var currOffset = 0;
+	      var offsetDeg = 30 - Math.floor(Math.random() * 36) + 135;
+	      var startOffset = 360 + offsetDeg;
+	      tempContext.globalCompositeOperation = animationUtils.BLEND_NORMAL;
+	
+	      tempContext.fillStyle = colorUtils.WHITE;
+	      tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+	
+	      tempContext.translate(this.imageElement.eyesMidpoint.x, this.imageElement.eyesMidpoint.y);
+	      tempContext.lineWidth = 1;
+	      tempContext.lineCap = 'round';
+	
+	      gradientColors.forEach(function (color, index, arr) {
+	        var nextColor = arr[(index + 1) % arr.length];
+	        var colorSplit = colorUtils.splitRGBA(color);
+	        var nextColorSplit = colorUtils.splitRGBA(nextColor);
+	        var rStep = (nextColorSplit.r - colorSplit.r) / degBetweenColors;
+	        var gStep = (nextColorSplit.g - colorSplit.g) / degBetweenColors;
+	        var bStep = (nextColorSplit.b - colorSplit.b) / degBetweenColors;
+	        currOffset = degBetweenColors * index + startOffset;
+	
+	        for (var currDeg = 0; currDeg < degBetweenColors; currDeg += single ? 0.01 : 0.02) {
+	          var actualCurrDeg = currDeg + currOffset + startOffset;
+	          tempContext.save();
+	          tempContext.rotate(Math.PI * actualCurrDeg * -1 / 180);
+	          tempContext.translate(tempContext.lineWidth / 2 * -1, tempContext.lineWidth / 2);
+	
+	          var currR = parseInt(colorSplit.r + currDeg * rStep, 10);
+	          var currG = parseInt(colorSplit.g + currDeg * gStep, 10);
+	          var currB = parseInt(colorSplit.b + currDeg * bStep, 10);
+	          var currA = 1;
+	          var currStyle = 'rgba(' + currR + ', ' + currG + ', ' + currB + ', ' + currA + ')';
+	
+	          tempContext.globalAlpha = currA;
+	
+	          tempContext.fillStyle = currStyle;
+	
+	          tempContext.fillRect(0, 0, 0.8, Math.max(tempCanvas.width, tempCanvas.height) * 2);
+	
+	          tempContext.restore();
+	        }
+	      });
+	
+	      var gradientPattern = tempContext.createPattern(tempCanvas, 'no-repeat');
+	
+	      tempContext.restore();
+	
+	      return gradientPattern;
+	    }
+	  }]);
+	
+	  return MultiAuraStep;
+	}();
+	
+	exports.default = MultiAuraStep;
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* global require */
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _easings = __webpack_require__(17);
+	
+	var ease = _interopRequireWildcard(_easings);
+	
+	var _colorUtils = __webpack_require__(10);
+	
+	var colorUtils = _interopRequireWildcard(_colorUtils);
+	
+	var _canvasUtils = __webpack_require__(16);
+	
+	var _canvasUtils2 = _interopRequireDefault(_canvasUtils);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Timeline = __webpack_require__(13);
+	
+	var VignetteStep = function () {
+	  function VignetteStep(imageElement, canvas, context, duration) {
+	    _classCallCheck(this, VignetteStep);
+	
+	    this.imageElement = imageElement;
+	    this.canvas = canvas;
+	    this.context = context;
+	    this.vignettePattern;
+	
+	    this.canvasUtils = new _canvasUtils2.default(imageElement, canvas, context);
+	
+	    this.animateInVignette(duration);
+	  }
+	
+	  _createClass(VignetteStep, [{
+	    key: 'drawVignetteWithAlpha',
+	    value: function drawVignetteWithAlpha() {
+	      var alpha = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	
+	      this.context.save();
+	
+	      this.context.fillStyle = this.vignettePattern;
+	      this.context.globalCompositeOperation = 'overlay';
+	      this.context.globalAlpha = alpha;
+	      this.context.fill();
+	      this.context.restore();
+	    }
+	  }, {
+	    key: 'animateInVignetteFrame',
+	    value: function animateInVignetteFrame() {
+	      var progress = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	
+	      if (this.imageElement.treatments.treatment.noEmotionScrim) {
+	        this.canvasUtils.redrawBaseImage();
+	
+	        this.canvasUtils.cutOutHex();
+	        this.canvasUtils.drawBackgroundWithAlpha(0.35);
+	      } else {
+	        var opacity = ease.expOut(0, 0.5, progress);
+	
+	        this.canvasUtils.redrawBaseImage();
+	        this.canvasUtils.cutOutHex();
+	
+	        this.canvasUtils.drawBackgroundWithAlpha(0.25);
+	        this.canvasUtils.drawVignetteWithAlpha(opacity);
+	
+	        this.context.restore();
+	      }
+	    }
+	  }, {
+	    key: 'animateInVignette',
+	    value: function animateInVignette() {
+	      var _this = this;
+	
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	
+	      if (!this.imageElement.treatments.treatment.noEmotionScrim) {
+	
+	        this.context.save();
+	
+	        var vignetteGradient = this.canvasUtils.createSimpleGradient(this.imageElement.treatments.treatment.vignette.innerColor, this.imageElement.treatments.treatment.vignette.outerColor, 0, false);
+	
+	        this.canvasUtils.applyFill({
+	          style: colorUtils.TRANSPARENT
+	        });
+	        this.canvasUtils.applyFill({
+	          style: vignetteGradient
+	        });
+	
+	        var vignetteLayer = this.canvas;
+	        this.vignettePattern = this.context.createPattern(vignetteLayer, 'no-repeat');
+	
+	        this.context.restore();
+	      }
+	
+	      if (duration === 0) {
+	        this.imageElement.ifNotDrawing(function () {
+	          _this.animateInVignetteFrame(1);
+	        });
+	      } else {
+	        (function () {
+	          var active = null;
+	          var progress = 0;
+	
+	          var vignetteTimeline = new Timeline({
+	            onStart: function onStart() {
+	              _this.imageElement.timelines.push(vignetteTimeline);
+	            },
+	            onComplete: function onComplete() {
+	              _this.imageElement.killTimeline(vignetteTimeline);
+	              _this.context.restore();
+	            }
+	          });
+	
+	          vignetteTimeline.to(_this.canvas, duration, {
+	            onStart: function onStart() {
+	              active = vignetteTimeline.getActive()[0];
+	              _this.imageElement.tweens.push(active);
+	            },
+	            onUpdate: function onUpdate() {
+	              progress = active.progress();
+	              _this.animateInVignetteFrame(progress);
+	            },
+	            onComplete: function onComplete() {
+	              _this.imageElement.killTween(active);
+	            }
+	          });
+	        })();
+	      }
+	    }
+	  }]);
+	
+	  return VignetteStep;
+	}();
+	
+	exports.default = VignetteStep;
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* global require */
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _easings = __webpack_require__(17);
+	
+	var ease = _interopRequireWildcard(_easings);
+	
+	var _colorUtils = __webpack_require__(10);
+	
+	var colorUtils = _interopRequireWildcard(_colorUtils);
+	
+	var _canvasUtils = __webpack_require__(16);
+	
+	var _canvasUtils2 = _interopRequireDefault(_canvasUtils);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Timeline = __webpack_require__(13);
+	
+	var HaloStep = function () {
+	  function HaloStep(imageElement, canvas, context, duration) {
+	    _classCallCheck(this, HaloStep);
+	
+	    this.imageElement = imageElement;
+	    this.canvas = canvas;
+	    this.context = context;
+	    this.canvasUtils = new _canvasUtils2.default(imageElement, canvas, context);
+	
+	    this.animateInHalo(duration);
+	  }
+	
+	  _createClass(HaloStep, [{
+	    key: 'animateInHaloFrame',
+	    value: function animateInHaloFrame() {
+	      var progress = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	
+	      if (this.imageElement.treatments.treatment.noEmotionScrim) {
+	        this.canvasUtils.redrawBaseImage();
+	        this.canvasUtils.cutOutHex();
+	        this.canvasUtils.drawBackgroundWithAlpha(0.35);
+	      } else {
+	        if (this.imageElement.treatments.treatment.halo.outerColor === colorUtils.TRANSPARENT && this.imageElement.treatments.treatment.halo.innerColor === colorUtils.TRANSPARENT) {
+	          return;
+	        }
+	        if (this.imageElement.totalEmotions === 1) {
+	          this.canvasUtils.redrawBaseImage();
+	          this.canvasUtils.cutOutHex();
+	          this.context.save();
+	          this.canvasUtils.drawBackgroundWithAlpha(0.25);
+	          this.canvasUtils.drawVignetteWithAlpha(0.5);
+	
+	          var alpha = ease.expOut(0, 0.75, progress);
+	          var r = ease.expOut(this.canvas.height * 0.1, this.canvas.height * 1.6, progress);
+	
+	          var gradient = this.context.createRadialGradient(this.imageElement.eyesMidpoint.x, this.imageElement.eyesMidpoint.y, this.imageElement.hexR, this.imageElement.eyesMidpoint.x, this.imageElement.eyesMidpoint.y, r);
+	
+	          gradient.addColorStop(0, this.imageElement.treatments.treatment.halo.innerColor);
+	          if (this.imageElement.treatments.treatment.halo.outerColor !== colorUtils.TRANSPARENT) {
+	            gradient.addColorStop(0.5, this.imageElement.treatments.treatment.halo.outerColor);
+	          }
+	          gradient.addColorStop(1, colorUtils.TRANSPARENT);
+	
+	          this.context.fillStyle = gradient;
+	          this.context.globalCompositeOperation = 'source-over';
+	          this.context.globalAlpha = alpha;
+	
+	          this.context.fill();
+	
+	          this.context.restore();
+	        } else {
+	          var _alpha = ease.expOut(0.2, 0.5, progress);
+	          var _r = ease.expOut(0.1, 1.2, progress);
+	
+	          this.canvasUtils.redrawBaseImage();
+	          this.canvasUtils.cutOutHex();
+	          this.context.save();
+	
+	          this.canvasUtils.drawBackgroundWithAlpha(0.25);
+	          this.canvasUtils.drawVignetteWithAlpha(0.5);
+	
+	          this.context.fillStyle = this.canvasUtils.createSimpleGradient(this.imageElement.treatments.treatment.halo.outerColor, colorUtils.TRANSPARENT, _r, false);
+	          this.context.globalCompositeOperation = 'source-over';
+	          this.context.globalAlpha = _alpha;
+	
+	          this.context.fill();
+	
+	          var alpha2 = ease.expOut(0, 0.5, progress);
+	          var r2 = ease.expOut(0, this.imageElement.hexR * (Object.keys(this.imageElement.facesAndEmotions[0]).length === 1 ? this.imageElement.treatments.treatment.halo.radius : 3) / this.canvas.height, progress);
+	          this.context.fillStyle = this.canvasUtils.createSimpleGradient(colorUtils.subAlpha(this.imageElement.treatments.treatment.halo.innerColor, Object.keys(this.imageElement.facesAndEmotions[0]).length === 1 ? this.imageElement.treatments.treatment.halo.alpha : 1), colorUtils.TRANSPARENT, r2, false, 0.3, 1);
+	          this.context.globalAlpha = alpha2;
+	          this.context.fill();
+	
+	          this.context.restore();
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'animateInHalo',
+	    value: function animateInHalo() {
+	      var _this = this;
+	
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	
+	      if (duration === 0) {
+	        if (!this.imageElement.treatments.treatment.noEmotionScrim) {
+	          this.imageElement.ifNotDrawing(function () {
+	            _this.animateInHaloFrame();
+	          });
+	        }
+	      } else {
+	        (function () {
+	          var active = null;
+	          var progress = 0;
+	
+	          var haloTimeline = new Timeline({
+	            onStart: function onStart() {
+	              _this.imageElement.timelines.push(haloTimeline);
+	            },
+	            onComplete: function onComplete() {
+	              _this.imageElement.killTimeline(haloTimeline);
+	              _this.context.restore();
+	            }
+	          });
+	
+	          haloTimeline.to(_this.canvas, duration, {
+	            onStart: function onStart() {
+	              _this.context.save();
+	              active = haloTimeline.getActive()[0];
+	              _this.imageElement.tweens.push(active);
+	              _this.context.restore();
+	            },
+	            onUpdate: function onUpdate() {
+	              if (!_this.imageElement.treatments.treatment.noEmotionScrim) {
+	                progress = active.progress();
+	                _this.animateInHaloFrame(progress, _this.imageElement.treatments.treatment.halo.radius);
+	              }
+	            },
+	            onComplete: function onComplete() {
+	              _this.imageElement.killTween(active);
+	            }
+	          });
+	        })();
+	      }
+	    }
+	  }]);
+	
+	  return HaloStep;
+	}();
+	
+	exports.default = HaloStep;
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* global require, single, Image */
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _easings = __webpack_require__(17);
+	
+	var ease = _interopRequireWildcard(_easings);
+	
+	var _assets = __webpack_require__(27);
+	
+	var assets = _interopRequireWildcard(_assets);
+	
+	var _animationUtils = __webpack_require__(9);
+	
+	var animationUtils = _interopRequireWildcard(_animationUtils);
+	
+	var _geometryUtils = __webpack_require__(8);
+	
+	var geometryUtils = _interopRequireWildcard(_geometryUtils);
+	
+	var _colorUtils = __webpack_require__(10);
+	
+	var colorUtils = _interopRequireWildcard(_colorUtils);
+	
+	var _canvasUtils = __webpack_require__(16);
+	
+	var _canvasUtils2 = _interopRequireDefault(_canvasUtils);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Timeline = __webpack_require__(13);
+	
+	var ChromeStep = function () {
+	  function ChromeStep(imageElement, canvas, context, duration) {
+	    _classCallCheck(this, ChromeStep);
+	
+	    this.imageElement = imageElement;
+	    this.canvas = canvas;
+	    this.context = context;
+	
+	    this.canvasUtils = new _canvasUtils2.default(imageElement, canvas, context);
+	
+	    this.logoTop = 40;
+	    this.logoLeft = 40;
+	    this.logoWidth = 348 * (110 / 348);
+	    this.logoHeight = 136 * (110 / 348);
+	
+	    this.logo = new Image();
+	    this.logo.src = assets.logoSrc;
+	
+	    this.chrome(duration);
+	  }
+	
+	  _createClass(ChromeStep, [{
+	    key: 'chrome',
+	    value: function chrome() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 2 : arguments[0];
+	
+	      this.imageElement.finalImage = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
+	      this.drawChrome(duration);
+	    }
+	  }, {
+	    key: 'drawChromeFrame',
+	    value: function drawChromeFrame() {
+	      var progress = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	      var height = arguments.length <= 1 || arguments[1] === undefined ? 112 : arguments[1];
+	      var callback = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+	
+	      this.context.globalCompositeOperation = 'source-over';
+	      this.context.fillStyle = 'rgba(255, 255, 255, ' + progress + ')';
+	      this.context.fillRect(0, this.canvas.height - height, this.canvas.width, height);
+	
+	      if (callback) {
+	        callback();
+	      }
+	    }
+	  }, {
+	    key: 'drawChrome',
+	    value: function drawChrome() {
+	      var _this = this;
+	
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 2 : arguments[0];
+	
+	      var height = 0;
+	      if (single) {
+	        height = animationUtils.CHROME_SHORT_HEIGHT;
+	      } else {
+	        height = this.imageElement.totalEmotions <= animationUtils.CHROME_MAX_ITEMS / animationUtils.CHROME_MAX_ROWS ? animationUtils.CHROME_SHORT_HEIGHT : animationUtils.CHROME_TALL_HEIGHT;
+	      }
+	      if (duration === 0) {
+	        this.imageElement.ifNotDrawing(function () {
+	          if (_this.imageElement.totalEmotions > 0) {
+	            _this.drawChromeFrame(1, height, function () {
+	              var tick = 0;
+	              _this.imageElement.facesAndEmotions.forEach(function (person) {
+	                for (var emotion in person) {
+	                  _this.drawChromeHex(height, emotion, person[emotion], tick, 1);
+	                  tick++;
+	                }
+	              });
+	              _this.context.globalCompositeOperation = 'overlay';
+	              _this.context.drawImage(_this.logo, _this.logoLeft, _this.logoTop, single ? _this.logoWidth * 1.5 : _this.logoWidth, single ? _this.logoHeight * 1.5 : _this.logoHeight);
+	              _this.context.globalCompositeOperation = 'source-over';
+	            });
+	          } else {
+	            _this.context.globalCompositeOperation = 'overlay';
+	            _this.context.drawImage(_this.logo, _this.logoLeft, _this.logoTop, single ? _this.logoWidth * 1.5 : _this.logoWidth, single ? _this.logoHeight * 1.5 : _this.logoHeight);
+	            _this.context.globalCompositeOperation = 'source-over';
+	          }
+	        });
+	      } else {
+	        (function () {
+	          var timeline = new Timeline({
+	            onComplete: function onComplete() {
+	              _this.imageElement.killTimeline(timeline);
+	            }
+	          });
+	          var currActive = null;
+	          var tick = -1;
+	          _this.imageElement.canvasSnapshot = _this.context.createPattern(_this.canvas, 'no-repeat');
+	          _this.canvasUtils.redrawCurrentCanvas();
+	          if (_this.imageElement.totalEmotions > 0) {
+	            timeline.to(_this, animationUtils.EMOTION_HEX_FADE_DURATION / _this.imageElement.timeFactor, {
+	              onStart: function onStart() {
+	                currActive = timeline.getActive()[0];
+	                _this.imageElement.tweens.push(currActive);
+	              },
+	              onUpdate: function onUpdate() {
+	                var progress = currActive.progress();
+	                _this.drawChromeFrame(progress, height);
+	              },
+	              onComplete: function onComplete() {
+	                _this.imageElement.killTween(currActive);
+	              }
+	            });
+	
+	            _this.imageElement.facesAndEmotions.forEach(function (person) {
+	              var _loop = function _loop(emotion) {
+	                timeline.to(_this, animationUtils.EMOTION_HEX_FADE_DURATION / _this.imageElement.timeFactor, {
+	                  onStart: function onStart() {
+	                    currActive = timeline.getActive()[0];
+	                    _this.imageElement.tweens.push(currActive);
+	                    tick++;
+	                    _this.imageElement.canvasSnapshot = _this.context.createPattern(_this.canvas, 'no-repeat');
+	                  },
+	                  onUpdate: function onUpdate() {
+	                    _this.canvasUtils.redrawCurrentCanvas();
+	                    _this.drawChromeHex(height, emotion, person[emotion], tick, currActive.progress());
+	                  },
+	                  onComplete: function onComplete() {
+	                    _this.canvasUtils.redrawCurrentCanvas();
+	                    _this.drawChromeHex(height, emotion, person[emotion], tick, 1);
+	                    _this.imageElement.killTween(currActive);
+	                    _this.imageElement.canvasSnapshot = _this.context.createPattern(_this.canvas, 'no-repeat');
+	                  }
+	                });
+	              };
+	
+	              for (var emotion in person) {
+	                _loop(emotion);
+	              }
+	            });
+	          }
+	          timeline.to(_this, animationUtils.EMOTION_HEX_FADE_DURATION / _this.imageElement.timeFactor, {
+	            onStart: function onStart() {
+	              currActive = timeline.getActive()[0];
+	            },
+	            onUpdate: function onUpdate() {
+	              _this.canvasUtils.redrawCurrentCanvas();
+	              _this.context.globalCompositeOperation = 'overlay';
+	              _this.context.globalAlpha = ease.exp(0, 1, currActive.progress());
+	              _this.context.drawImage(_this.logo, _this.logoLeft, _this.logoTop, _this.logoWidth, _this.logoHeight);
+	              _this.context.globalCompositeOperation = 'source-over';
+	            }
+	          });
+	
+	          _this.imageElement.timelines.push(timeline);
+	        })();
+	      }
+	    }
+	  }, {
+	    key: 'drawChromeHex',
+	    value: function drawChromeHex(height, emotion, strength, num, progress) {
+	      var _this2 = this;
+	
+	      var radius = arguments.length <= 5 || arguments[5] === undefined ? animationUtils.CHROME_HEX_RADIUS : arguments[5];
+	
+	      if (num >= animationUtils.CHROME_MAX_ITEMS) {
+	        return;
+	      }
+	
+	      this.canvasUtils.retraceCanvas();
+	
+	      var x = 0;
+	      var y = 0;
+	      if (single) {
+	        x = animationUtils.CHROME_HORIZONTAL_PADDING + num % animationUtils.CHROME_MAX_ITEMS * animationUtils.BACKEND_CHROME_ITEM_WIDTH;
+	        y = this.canvas.height - height + animationUtils.CHROME_VERTICAL_PADDING + Math.floor(num / animationUtils.CHROME_MAX_ITEMS) * animationUtils.CHROME_SINGLE_LINE_HEIGHT + Math.floor(num / animationUtils.CHROME_MAX_ITEMS) * animationUtils.CHROME_SPACE_BETWEEN_LINES;
+	      } else {
+	        x = animationUtils.CHROME_HORIZONTAL_PADDING + num % (animationUtils.CHROME_MAX_ITEMS / animationUtils.CHROME_MAX_ROWS) * animationUtils.CHROME_ITEM_WIDTH;
+	        y = this.canvas.height - height + animationUtils.CHROME_VERTICAL_PADDING + Math.floor(num / animationUtils.CHROME_MAX_ITEMS / animationUtils.CHROME_MAX_ROWS) * animationUtils.CHROME_SINGLE_LINE_HEIGHT + Math.floor(num / (animationUtils.CHROME_MAX_ITEMS / animationUtils.CHROME_MAX_ROWS)) * animationUtils.CHROME_SPACE_BETWEEN_LINES;
+	      }
+	      var hexPoints = geometryUtils.createRoundedHexagon(radius, radius / 5);
+	      this.context.beginPath();
+	      var hexStartX = x + radius;
+	      var hexStartY = y + radius;
+	      hexPoints.forEach(function (vertex, i, vertices) {
+	        vertex.x += hexStartX;
+	        vertex.y += hexStartY;
+	
+	        if (i === 0) {
+	          _this2.context.moveTo(vertex.x, vertex.y);
+	          return;
+	        }
+	        if (i % 2 === 0) {
+	          _this2.context.lineTo(vertex.x, vertex.y);
+	        } else {
+	          var prev = i === 0 ? vertices[vertices.length - 1] : vertices[i - 1];
+	          var xMid = (vertex.x + prev.x) / 2;
+	          var yMid = (vertex.y + prev.y) / 2;
+	
+	          var r = geometryUtils.distanceFromCoords(prev, vertex) / 2;
+	
+	          var bigIndex = Math.floor(i / 2);
+	          if ([5].includes(bigIndex)) {
+	            xMid -= r * (Math.sqrt(2) / 3);
+	          } else if ([2, 3].includes(bigIndex)) {
+	            xMid += r * (Math.sqrt(2) / 3);
+	          } else if ([4].includes(bigIndex)) {
+	            xMid += r * (Math.sqrt(2) / 3);
+	          } else if ([1].includes(bigIndex)) {
+	            xMid -= r * (Math.sqrt(2) / 3);
+	          } else if ([0].includes(bigIndex)) {
+	            xMid -= r * (Math.sqrt(3) / 3);
+	          }
+	
+	          if ([1, 2].includes(bigIndex)) {
+	            yMid += r / 2;
+	          } else if ([4, 5].includes(bigIndex)) {
+	            yMid -= r / 2;
+	          }
+	
+	          var startAngle = (30 + bigIndex * -1 * 60 + 360) % 360;
+	          var endAngle = (startAngle - 60 + 360) % 360;
+	
+	          _this2.context.arc(xMid, yMid, r, startAngle / 360 * (Math.PI * 2), endAngle / 360 * (Math.PI * 2), true);
+	        }
+	      });
+	      this.context.closePath();
+	      this.context.globalAlpha = ease.exp(0, 1, progress);
+	      var grad = this.context.createLinearGradient(x, y, x + radius * 2, y + radius * 2);
+	      grad.addColorStop(0, colorUtils[emotion][0]);
+	      grad.addColorStop(1, colorUtils[emotion][2]);
+	      this.context.fillStyle = grad;
+	      this.context.fill();
+	      this.context.globalAlpha = 1;
+	      this.context.font = '12px "Roboto Mono"';
+	      this.context.fillStyle = 'rgba(0, 0, 0, ' + ease.exp(0, 0.38, progress) + ')';
+	      this.context.fillText(emotion.toLowerCase() + ':' + strength, hexStartX + radius * 1.5, hexStartY + radius / 4);
+	    }
+	  }]);
+	
+	  return ChromeStep;
+	}();
+	
+	exports.default = ChromeStep;
+
+/***/ },
+/* 27 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var logoSrc = exports.logoSrc = 'data:image/png;base64,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';
+
+/***/ },
+/* 28 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var CANVAS_WIDTH = exports.CANVAS_WIDTH = 1080;
+	var CANVAS_HEIGHT = exports.CANVAS_HEIGHT = 640;
+	
+	var BACKEND_CANVAS_WIDTH = exports.BACKEND_CANVAS_WIDTH = CANVAS_WIDTH * 2 - 112;
+	var BACKEND_CANVAS_HEIGHT = exports.BACKEND_CANVAS_HEIGHT = CANVAS_HEIGHT * 2;
+	
+	var LOGO_TOP = exports.LOGO_TOP = 40;
+	var LOGO_LEFT = exports.LOGO_LEFT = 40;
+	var LOGO_WIDTH = exports.LOGO_WIDTH = 110;
+	var LOGO_HEIGHT = exports.LOGO_HEIGHT = 43;
+
+/***/ },
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* global require, document */
@@ -5928,7 +8082,7 @@
 	exports.default = JsonElement;
 
 /***/ },
-/* 19 */
+/* 30 */
 /***/ function(module, exports) {
 
 	/* global document, setTimeout */
@@ -6040,7 +8194,7 @@
 	exports.default = Threeup;
 
 /***/ },
-/* 20 */
+/* 31 */
 /***/ function(module, exports) {
 
 	/* global document */
@@ -6189,7 +8343,7 @@
 	exports.default = Controls;
 
 /***/ },
-/* 21 */
+/* 32 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -6285,7 +8439,7 @@
 	}];
 
 /***/ },
-/* 22 */
+/* 33 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -6333,7 +8487,7 @@
 	}];
 
 /***/ },
-/* 23 */
+/* 34 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -6381,7 +8535,7 @@
 	}];
 
 /***/ },
-/* 24 */
+/* 35 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -6456,7 +8610,7 @@
 	var STATES_AURA_MULTIPLE = exports.STATES_AURA_MULTIPLE = [];
 
 /***/ },
-/* 25 */
+/* 36 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -6546,7 +8700,7 @@
 	}];
 
 /***/ },
-/* 26 */
+/* 37 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -6585,7 +8739,7 @@
 	}];
 
 /***/ },
-/* 27 */
+/* 38 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -6681,16 +8835,16 @@
 	}];
 
 /***/ },
-/* 28 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(29);
+	var content = __webpack_require__(40);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(31)(content, {});
+	var update = __webpack_require__(42)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -6707,10 +8861,10 @@
 	}
 
 /***/ },
-/* 29 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(30)();
+	exports = module.exports = __webpack_require__(41)();
 	// imports
 	
 	
@@ -6721,7 +8875,7 @@
 
 
 /***/ },
-/* 30 */
+/* 41 */
 /***/ function(module, exports) {
 
 	/*
@@ -6777,7 +8931,7 @@
 
 
 /***/ },
-/* 31 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -7029,6 +9183,595 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 43 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* global require, single, document, states, requestAnimationFrame */
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+	
+	var _panelComponent = __webpack_require__(5);
+	
+	var _panelComponent2 = _interopRequireDefault(_panelComponent);
+	
+	var _flashStep = __webpack_require__(15);
+	
+	var _flashStep2 = _interopRequireDefault(_flashStep);
+	
+	var _zoomStep = __webpack_require__(19);
+	
+	var _zoomStep2 = _interopRequireDefault(_zoomStep);
+	
+	var _faceStep = __webpack_require__(21);
+	
+	var _faceStep2 = _interopRequireDefault(_faceStep);
+	
+	var _emotionStep = __webpack_require__(22);
+	
+	var _emotionStep2 = _interopRequireDefault(_emotionStep);
+	
+	var _multiAuraStep = __webpack_require__(23);
+	
+	var _multiAuraStep2 = _interopRequireDefault(_multiAuraStep);
+	
+	var _backgroundStep = __webpack_require__(44);
+	
+	var _backgroundStep2 = _interopRequireDefault(_backgroundStep);
+	
+	var _vignetteStep = __webpack_require__(24);
+	
+	var _vignetteStep2 = _interopRequireDefault(_vignetteStep);
+	
+	var _haloStep = __webpack_require__(25);
+	
+	var _haloStep2 = _interopRequireDefault(_haloStep);
+	
+	var _chromeStep = __webpack_require__(26);
+	
+	var _chromeStep2 = _interopRequireDefault(_chromeStep);
+	
+	var _faceUtils = __webpack_require__(6);
+	
+	var faceUtils = _interopRequireWildcard(_faceUtils);
+	
+	var _animationUtils = __webpack_require__(9);
+	
+	var animationUtils = _interopRequireWildcard(_animationUtils);
+	
+	var _geometryUtils = __webpack_require__(8);
+	
+	var geometryUtils = _interopRequireWildcard(_geometryUtils);
+	
+	var _canvasUtils = __webpack_require__(16);
+	
+	var _canvasUtils2 = _interopRequireDefault(_canvasUtils);
+	
+	var _imageConst = __webpack_require__(28);
+	
+	var imageConst = _interopRequireWildcard(_imageConst);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	//
+	
+	//
+	
+	var Timeline = __webpack_require__(13);
+	
+	var ImageElement = function (_PanelComponent) {
+	  _inherits(ImageElement, _PanelComponent);
+	
+	  function ImageElement() {
+	    var imgPath = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+	    var jsonPath = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+	    var readyCallback = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+	
+	    _classCallCheck(this, ImageElement);
+	
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ImageElement).call(this));
+	
+	    _this.canvasWidth = single ? imageConst.BACKEND_CANVAS_WIDTH : imageConst.CANVAS_WIDTH;
+	    _this.canvasHeight = single ? imageConst.BACKEND_CANVAS_HEIGHT : imageConst.CANVAS_HEIGHT;
+	
+	    _this.canvas = null;
+	    _this.context = null;
+	
+	    _this.width = 0;
+	    _this.height = 0;
+	
+	    _this.imageElement = null;
+	
+	    _this.scrimAlpha = 0;
+	
+	    _this.eyeMidpoints = [];
+	    _this.eyesMidpoint = new geometryUtils.Point();
+	    _this.allEyesCenter = new geometryUtils.Point();
+	
+	    _this.canvasSnapshot = null;
+	
+	    _this.offsetX = 0;
+	    _this.offsetY = 0;
+	
+	    _this.image = null;
+	
+	    _this.resizedImageOffset = null;
+	    _this.subRect = {};
+	
+	    _this.imageScale = 1;
+	
+	    _this.faceBounds = null;
+	
+	    _this.facesAndEmotions = [];
+	    _this.curFace = [];
+	    _this.hexR = 1;
+	
+	    _this.tweens = [];
+	    _this.timelines = [];
+	
+	    _this.treatments = {};
+	
+	    _this.resizedImageScale = 0;
+	
+	    _this.isDrawing = false;
+	    _this.auraAnimations = null;
+	    _this.readyCallback = readyCallback;
+	
+	    _this.hexVertices = [];
+	
+	    // this.imgPath = imgPath;
+	
+	    // this.finalImage = null;
+	
+	    // this.jsonPath = jsonPath;
+	    // this.json = null;
+	
+	    // this.fills = [];
+	
+	    // this.facesAndStrongestEmotions = null;
+	
+	    // this.gradientURL = null;
+	
+	    // this.totalEmotions = 0;
+	    // this.noEmotions = true;
+	
+	    // this.facesAndColors = [];
+	
+	
+	    // this.vignettePattern = null;
+	
+	    _this.init();
+	    return _this;
+	  }
+	
+	  _createClass(ImageElement, [{
+	    key: 'init',
+	    value: function init() {
+	      if (this.imageElement) {
+	        return;
+	      }
+	
+	      this.imageElement = document.createElement('div');
+	      this.imageElement.classList.add('image');
+	
+	      this.canvasUtils = new _canvasUtils2.default(this);
+	
+	      this.canvas = this.canvasUtils.createHiDPICanvas(this.canvasWidth, this.canvasHeight, 4);
+	      this.canvas.classList.add('image-canvas');
+	      this.canvas.width = this.canvasWidth;
+	      this.canvas.height = this.canvasHeight;
+	
+	      this.imageElement.appendChild(this.canvas);
+	
+	      this.context = this.canvas.getContext('2d');
+	
+	      this.faceStep = new _faceStep2.default(this, this.canvas, this.context);
+	      this.zoomStep = new _zoomStep2.default(this, this.canvas, this.context);
+	
+	      animationUtils.setSmoothing(this.context);
+	    }
+	  }, {
+	    key: 'loadImage',
+	    value: function loadImage(json, imgPath) {
+	      this.canvasUtils.loadImage(json, imgPath);
+	    }
+	  }, {
+	    key: 'startAnimations',
+	    value: function startAnimations() {
+	      var _this2 = this;
+	
+	      if (single) {
+	        this.zoom(0, true);
+	        this.startAuraAnimations();
+	      } else {
+	        _get(Object.getPrototypeOf(ImageElement.prototype), 'startAnimations', this).call(this, function () {
+	          _this2.startAuraAnimations();
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'startAuraAnimations',
+	    value: function startAuraAnimations() {
+	      var _this3 = this;
+	
+	      this.auraAnimations = new Timeline({
+	        onComplete: function onComplete() {
+	          _get(Object.getPrototypeOf(ImageElement.prototype), 'killTimeline', _this3).call(_this3, _this3.auraAnimations);
+	        }
+	      });
+	
+	      var auraAnimStates = this.faces.length === 1 ? states.STATES_AURA_SINGLE : states.STATES_AURA_MULTIPLE;
+	
+	      auraAnimStates.forEach(function (state) {
+	        _this3.auraAnimations.to(_this3, Math.max(state.DURATION, animationUtils.MIN_DURATION), {
+	          onStart: function onStart() {
+	            if (_this3[state.NAME]) {
+	              _this3[state.NAME](state.DURATION);
+	            } else {
+	              _this3.pause(state.DURATION);
+	            }
+	          }
+	        });
+	      });
+	
+	      this.timelines.push(this.auraAnimations);
+	    }
+	  }, {
+	    key: 'reinitFaces',
+	    value: function reinitFaces(json) {
+	      var _this4 = this;
+	
+	      _get(Object.getPrototypeOf(ImageElement.prototype), 'reinitFaces', this).call(this, json, function () {
+	        _this4.backgroundFill = 'blue';
+	        _this4.totalEmotions = 0;
+	        _this4.imageScale = 1;
+	        _this4.hexVertices = [];
+	        _this4.facesAndEmotions = faceUtils.generateFacesAndEmotions(_this4.faces);
+	        _this4.facesAndStrongestEmotions = faceUtils.generateFacesAndEmotions(_this4.faces, true);
+	        _this4.treatments = animationUtils.generateTreatments(_this4.facesAndStrongestEmotions);
+	        _this4.eyeMidpoints = faceUtils.generateEyeMidpoints(_this4.faces);
+	        _this4.faceBounds = faceUtils.generateFaceBounds(_this4.faces);
+	        _this4.allEyesCenter = faceUtils.generateAllEyesCenter(_this4.faces);
+	        var totalEmotions = 0;
+	        _this4.facesAndEmotions.forEach(function (face) {
+	          totalEmotions += Object.keys(face).length;
+	        });
+	        _this4.noEmotions = totalEmotions === 0;
+	        _this4.totalEmotions = totalEmotions;
+	        _this4.scrimAlpha = 0;
+	        _this4.fills = [];
+	        _this4.vignettePattern = null;
+	        _this4.resizedImageOffset = null;
+	        _this4.resizedImageScale = 0;
+	        _this4.auraAnimations = null;
+	        _this4.offsetX = 0;
+	        _this4.offsetY = 0;
+	      });
+	    }
+	  }, {
+	    key: 'ifNotDrawing',
+	    value: function ifNotDrawing(callback) {
+	      var _this5 = this;
+	
+	      requestAnimationFrame(function () {
+	        if (_this5.isDrawing) {
+	          _this5.imageElement.ifNotDrawing(callback);
+	        } else {
+	          callback();
+	        }
+	      });
+	    }
+	
+	    //
+	
+	  }, {
+	    key: 'flash',
+	    value: function flash() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.flashStep = new _flashStep2.default(this, this.canvas, this.context, duration);
+	    }
+	  }, {
+	    key: 'zoom',
+	    value: function zoom() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.zoomStep.zoom(duration, false);
+	    }
+	  }, {
+	    key: 'face',
+	    value: function face() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.faceStep.face(duration);
+	    }
+	  }, {
+	    key: 'forehead',
+	    value: function forehead() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.faceStep.forehead(duration);
+	    }
+	  }, {
+	    key: 'eyes',
+	    value: function eyes() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.faceStep.eyes(duration);
+	    }
+	  }, {
+	    key: 'ears',
+	    value: function ears() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.faceStep.ears(duration);
+	    }
+	  }, {
+	    key: 'nose',
+	    value: function nose() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.faceStep.nose(duration);
+	    }
+	  }, {
+	    key: 'mouth',
+	    value: function mouth() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.faceStep.mouth(duration);
+	    }
+	  }, {
+	    key: 'chin',
+	    value: function chin() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.faceStep.chin(duration);
+	    }
+	  }, {
+	    key: 'allFeatures',
+	    value: function allFeatures() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.faceStep.allFeatures(duration);
+	    }
+	  }, {
+	    key: 'zoomOut',
+	    value: function zoomOut() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.zoomStep.zoom(duration, true);
+	    }
+	  }, {
+	    key: 'emotion',
+	    value: function emotion() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.emotionStep = new _emotionStep2.default(this, this.canvas, this.context, duration);
+	    }
+	  }, {
+	    key: 'animateInBackground',
+	    value: function animateInBackground() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.backgroundStep = new _backgroundStep2.default(this, this.canvas, this.context, duration);
+	    }
+	  }, {
+	    key: 'animateInMultiAura',
+	    value: function animateInMultiAura() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.mutliAuraStep = new _multiAuraStep2.default(this, this.canvas, this.context, duration);
+	    }
+	  }, {
+	    key: 'animateInVignette',
+	    value: function animateInVignette() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.vignetteStep = new _vignetteStep2.default(this, this.canvas, this.context, duration);
+	    }
+	  }, {
+	    key: 'animateInHalo',
+	    value: function animateInHalo() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.haloStep = new _haloStep2.default(this, this.canvas, this.context, duration);
+	    }
+	  }, {
+	    key: 'chrome',
+	    value: function chrome() {
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+	
+	      this.chromeStep = new _chromeStep2.default(this, this.canvas, this.context, duration);
+	    }
+	  }]);
+	
+	  return ImageElement;
+	}(_panelComponent2.default);
+	
+	exports.default = ImageElement;
+
+/***/ },
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* global require */
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _easings = __webpack_require__(17);
+	
+	var ease = _interopRequireWildcard(_easings);
+	
+	var _geometryUtils = __webpack_require__(8);
+	
+	var geometryUtils = _interopRequireWildcard(_geometryUtils);
+	
+	var _canvasUtils = __webpack_require__(16);
+	
+	var _canvasUtils2 = _interopRequireDefault(_canvasUtils);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Timeline = __webpack_require__(13);
+	
+	var BackgroundStep = function () {
+	  function BackgroundStep(imageElement, canvas, context, duration) {
+	    _classCallCheck(this, BackgroundStep);
+	
+	    this.imageElement = imageElement;
+	    this.canvas = canvas;
+	    this.context = context;
+	    this.vignettePattern;
+	
+	    this.canvasUtils = new _canvasUtils2.default(imageElement, canvas, context);
+	
+	    this.animateInBackground(duration);
+	  }
+	
+	  _createClass(BackgroundStep, [{
+	    key: 'animateInBackgroundFrame',
+	    value: function animateInBackgroundFrame() {
+	      var _this = this;
+	
+	      var progress = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	      var hexRadius = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
+	
+	      this.canvasUtils.redrawBaseImage();
+	
+	      this.canvasUtils.cutOutHex(false);
+	
+	      this.imageElement.context.save();
+	      this.imageElement.context.moveTo(0, 0);
+	      this.imageElement.context.translate(this.imageElement.eyesMidpoint.x, this.imageElement.eyesMidpoint.y);
+	
+	      var points = geometryUtils.createRoundedHexagon(Math.max(this.imageElement.hexR, hexRadius));
+	
+	      this.imageElement.context.moveTo(Math.max(this.imageElement.hexR, hexRadius), 0);
+	
+	      points.reverse();
+	
+	      points.forEach(function (vertex, i, vertices) {
+	        if (i % 2 === 0) {
+	          _this.imageElement.context.lineTo(vertex.x, vertex.y);
+	        } else {
+	          var prev = i === 0 ? vertices[vertices.length - 1] : vertices[i - 1];
+	          var xMid = (vertex.x + prev.x) / 2;
+	          var yMid = (vertex.y + prev.y) / 2;
+	          var r = geometryUtils.distanceFromCoords(prev, vertex) / 2;
+	
+	          var bigIndex = Math.floor(i / 2);
+	          if ([0, 4].includes(bigIndex)) {
+	            xMid -= r / 2;
+	          } else if ([1, 2].includes(bigIndex)) {
+	            xMid += r / 2;
+	          } else if ([5].includes(bigIndex)) {
+	            xMid -= r * Math.sqrt(3) / 2;
+	          } else if ([3].includes(bigIndex)) {
+	            xMid += r / 3;
+	          }
+	
+	          if ([5, 1].includes(bigIndex)) {
+	            yMid -= r / 2;
+	          } else if ([4].includes(bigIndex)) {
+	            yMid += r / 2;
+	          } else if ([0].includes(bigIndex)) {
+	            yMid -= r / 2;
+	          } else if ([3].includes(bigIndex)) {
+	            yMid += r / 2;
+	          }
+	
+	          var startAngle = (30 + bigIndex * 60 + 360) % 360;
+	          var endAngle = (startAngle + 60 + 360) % 360;
+	
+	          _this.imageElement.context.arc(xMid, yMid, r, startAngle / 360 * (Math.PI * 2), endAngle / 360 * (Math.PI * 2), false);
+	        }
+	      });
+	
+	      this.imageElement.context.closePath();
+	      this.imageElement.context.restore();
+	
+	      this.canvasUtils.drawBackgroundWithAlpha(ease.square(0, 0.25, progress));
+	    }
+	  }, {
+	    key: 'animateInBackground',
+	    value: function animateInBackground() {
+	      var _this2 = this;
+	
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	
+	      var rEnd = this.imageElement.canvas.width;
+	
+	      if (duration === 0) {
+	        this.imageElement.ifNotDrawing(function () {
+	          _this2.animateInBackgroundFrame(1, rEnd);
+	        });
+	      } else {
+	        (function () {
+	          var active = null;
+	          var backgroundTimeline = new Timeline({
+	            onStart: function onStart() {
+	              _this2.imageElement.timelines.push(backgroundTimeline);
+	            },
+	            onComplete: function onComplete() {
+	              _this2.imageElement.killTimeline(backgroundTimeline);
+	              _this2.imageElement.context.restore();
+	            }
+	          });
+	
+	          var rStart = _this2.imageElement.hexR;
+	          var progress = 0;
+	          var currR = rStart;
+	
+	          backgroundTimeline.to(_this2.imageElement.canvas, duration, {
+	            onStart: function onStart() {
+	              active = backgroundTimeline.getActive()[0];
+	              _this2.imageElement.tweens.push(active);
+	            },
+	            onUpdate: function onUpdate() {
+	              progress = active.progress();
+	              currR = ease.exp(rStart, rEnd, progress);
+	              _this2.animateInBackgroundFrame(progress, currR);
+	            },
+	            onComplete: function onComplete() {
+	              _this2.imageElement.killTween(active);
+	            }
+	          });
+	        })();
+	      }
+	    }
+	  }]);
+	
+	  return BackgroundStep;
+	}();
+	
+	exports.default = BackgroundStep;
 
 /***/ }
 /******/ ]);

@@ -13,6 +13,8 @@ import * as faceUtils from './_faceUtils';
 import * as geometryUtils from './_geometryUtils';
 import * as colorUtils from './_colorUtils';
 
+import * as imageConst from './image/_imageConst';
+
 const Tween = require('gsap/src/minified/TweenMax.min.js');
 const Timeline = require('gsap/src/minified/TimelineMax.min.js');
 
@@ -20,8 +22,8 @@ export default class ImageElement extends PanelComponent {
   constructor(imgPath = null, jsonPath = null, readyCallback = null) {
     super();
 
-    this.canvasWidth = single ? animationUtils.BACKEND_CANVAS_WIDTH : animationUtils.CANVAS_WIDTH;
-    this.canvasHeight = single ? animationUtils.BACKEND_CANVAS_HEIGHT : animationUtils.CANVAS_HEIGHT;
+    this.canvasWidth = single ? imageConst.BACKEND_CANVAS_WIDTH : imageConst.CANVAS_WIDTH;
+    this.canvasHeight = single ? imageConst.BACKEND_CANVAS_HEIGHT : imageConst.CANVAS_HEIGHT;
 
     this.imgPath = imgPath;
     this.imageElement = null;

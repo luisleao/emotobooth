@@ -4,17 +4,16 @@ import * as colorUtils from './_colorUtils';
 import * as emotionUtils from './_emotionUtils';
 import * as geometryUtils from './_geometryUtils';
 
-export const CANVAS_WIDTH = 1080;
-export const CANVAS_HEIGHT = 640;
+import {
+  CANVAS_WIDTH,
+  BACKEND_CANVAS_WIDTH
+} from './image/_imageConst';
 
 export const HEX_LOWER_MIN_VERTICAL_MARGIN = 10;
 export const HEX_UPPER_MIN_VERTICAL_MARGIN = 30;
 export const HEX_MIN_BOTTOM_VERTICAL_MARGIN = 180;
 
 export const HEX_MIN_BOTTOM_EYES_MARGIN = 0.5;
-
-export const BACKEND_CANVAS_WIDTH = CANVAS_WIDTH * 2 - 112;
-export const BACKEND_CANVAS_HEIGHT = CANVAS_HEIGHT * 2;
 
 export const HEXAGON_CORNER_RADIUS = 10;
 
