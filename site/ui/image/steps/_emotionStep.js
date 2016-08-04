@@ -47,7 +47,7 @@ export default class EmotionStep {
           this.imageElement.timelines.push(colorTimeline);
         },
         onComplete: () => {
-          super.killTimeline(colorTimeline);
+          this.imageElement.killTimeline(colorTimeline);
         }
       });
 
@@ -75,7 +75,7 @@ export default class EmotionStep {
           });
         },
         onComplete: () => {
-          super.killTween(active);
+          this.imageElement.killTween(active);
         }
       });
       colorTimeline.to(this.canvas, duration * 0.25, {
@@ -106,7 +106,7 @@ export default class EmotionStep {
         onComplete: () => {
           this.canvasUtils.redrawCurrentCanvas();
           this.imageElement.isDrawing = false;
-          this.imageElement.super.killTween(active);
+          this.imageElement.killTween(active);
         }
       });
     }

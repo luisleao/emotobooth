@@ -426,19 +426,17 @@
 	
 	'use strict';
 	
+	// import ImageElement from './imageElement';
+	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _imageElement = __webpack_require__(4);
+	var _imageElementNext = __webpack_require__(45);
 	
-	var _imageElement2 = _interopRequireDefault(_imageElement);
-	
-	var _imageElementSplit = __webpack_require__(43);
-	
-	var _imageElementSplit2 = _interopRequireDefault(_imageElementSplit);
+	var _imageElementNext2 = _interopRequireDefault(_imageElementNext);
 	
 	var _jsonElement = __webpack_require__(29);
 	
@@ -449,9 +447,10 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var EVENT_NAME_NEXT = 'google-next';
-	var EVENT_NAME_HORIZON = 'google-horizon';
-	// const EVENT = EVENT_NAME_NEXT;
-	var EVENT = EVENT_NAME_HORIZON;
+	var EVENT = EVENT_NAME_NEXT;
+	
+	// const EVENT_NAME_HORIZON = 'google-horizon';
+	// const EVENT = EVENT_NAME_HORIZON;
 	
 	var Panel = function () {
 	  function Panel(jsonData) {
@@ -474,13 +473,13 @@
 	      var _this = this;
 	
 	      if (EVENT === EVENT_NAME_NEXT) {
-	        this.image = new _imageElement2.default(this.imagePath, this.respPath, function () {
+	        this.image = new _imageElementNext2.default(this.imagePath, this.respPath, function () {
 	          _this.imageIsReady();
 	        });
 	      } else {
-	        this.image = new _imageElementSplit2.default(this.imagePath, this.respPath, function () {
-	          _this.imageIsReady();
-	        });
+	        // this.image = new ImageElementSplit(this.imagePath, this.respPath, () => {
+	        //    this.imageIsReady();
+	        // });
 	      }
 	
 	      this.jsonElement = new _jsonElement2.default(this.reqPath, this.respPath);
@@ -613,1940 +612,7 @@
 	exports.default = Panel;
 
 /***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* global require, single, document, window, Image, states, requestAnimationFrame */
-	
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-	
-	var _panelComponent = __webpack_require__(5);
-	
-	var _panelComponent2 = _interopRequireDefault(_panelComponent);
-	
-	var _assets = __webpack_require__(27);
-	
-	var assets = _interopRequireWildcard(_assets);
-	
-	var _easings = __webpack_require__(17);
-	
-	var ease = _interopRequireWildcard(_easings);
-	
-	var _utils = __webpack_require__(20);
-	
-	var utils = _interopRequireWildcard(_utils);
-	
-	var _animationUtils = __webpack_require__(9);
-	
-	var animationUtils = _interopRequireWildcard(_animationUtils);
-	
-	var _faceUtils = __webpack_require__(6);
-	
-	var faceUtils = _interopRequireWildcard(_faceUtils);
-	
-	var _geometryUtils = __webpack_require__(8);
-	
-	var geometryUtils = _interopRequireWildcard(_geometryUtils);
-	
-	var _colorUtils = __webpack_require__(10);
-	
-	var colorUtils = _interopRequireWildcard(_colorUtils);
-	
-	var _imageConst = __webpack_require__(28);
-	
-	var imageConst = _interopRequireWildcard(_imageConst);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Tween = __webpack_require__(11);
-	var Timeline = __webpack_require__(13);
-	
-	var ImageElement = function (_PanelComponent) {
-	  _inherits(ImageElement, _PanelComponent);
-	
-	  function ImageElement() {
-	    var imgPath = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-	    var jsonPath = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-	    var readyCallback = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
-	
-	    _classCallCheck(this, ImageElement);
-	
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ImageElement).call(this));
-	
-	    _this.canvasWidth = single ? imageConst.BACKEND_CANVAS_WIDTH : imageConst.CANVAS_WIDTH;
-	    _this.canvasHeight = single ? imageConst.BACKEND_CANVAS_HEIGHT : imageConst.CANVAS_HEIGHT;
-	
-	    _this.imgPath = imgPath;
-	    _this.imageElement = null;
-	    _this.canvas = null;
-	    _this.context = null;
-	    _this.image = null;
-	    _this.logo = null;
-	
-	    _this.logoTop = 40;
-	    _this.logoLeft = 40;
-	    _this.logoWidth = 348 * (110 / 348);
-	    _this.logoHeight = 136 * (110 / 348);
-	
-	    _this.finalImage = null;
-	
-	    _this.jsonPath = jsonPath;
-	    _this.json = null;
-	
-	    _this.offsetX = 0;
-	    _this.offsetY = 0;
-	    _this.width = 0;
-	    _this.height = 0;
-	    _this.imageScale = 1;
-	    _this.subRect = {};
-	
-	    _this.fills = [];
-	    _this.scrimAlpha = 0;
-	
-	    _this.eyesMidpoint = new geometryUtils.Point();
-	    _this.allEyesCenter = new geometryUtils.Point();
-	    _this.faceBounds = null;
-	    _this.facesAndEmotions = null;
-	    _this.facesAndStrongestEmotions = null;
-	    _this.treatments = null;
-	
-	    _this.gradientURL = null;
-	
-	    _this.isDrawing = false;
-	    _this.auraAnimations = null;
-	
-	    _this.totalEmotions = 0;
-	    _this.noEmotions = true;
-	    _this.facesAndEmotions = [];
-	    _this.facesAndColors = [];
-	    _this.eyeMidpoints = [];
-	    _this.hexVertices = [];
-	    _this.hexR = 1;
-	    _this.vignettePattern = null;
-	    _this.canvasSnapshot = null;
-	
-	    _this.backgroundFill = 'blue';
-	
-	    _this.treatments = {};
-	
-	    _this.PIXEL_RATIO = function () {
-	      var ctx = document.createElement('canvas').getContext('2d'),
-	          dpr = window.devicePixelRatio || 1,
-	          bsr = ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1;
-	
-	      return dpr / bsr;
-	    }();
-	
-	    _this.resizedImageOffset = null;
-	    _this.resizedImageScale = 0;
-	    _this.readyCallback = readyCallback;
-	
-	    _this.init();
-	    return _this;
-	  }
-	
-	  _createClass(ImageElement, [{
-	    key: 'startAnimations',
-	    value: function startAnimations() {
-	      var _this2 = this;
-	
-	      if (single) {
-	        this.zoom(0, true);
-	        this.startAuraAnimations();
-	      } else {
-	        _get(Object.getPrototypeOf(ImageElement.prototype), 'startAnimations', this).call(this, function () {
-	          _this2.startAuraAnimations();
-	        });
-	      }
-	    }
-	  }, {
-	    key: 'createHiDPICanvas',
-	    value: function createHiDPICanvas(w, h, ratio) {
-	      if (!ratio) {
-	        ratio = this.PIXEL_RATIO;
-	      }
-	      var tempCanvas = document.createElement('canvas');
-	      tempCanvas.width = w * ratio;
-	      tempCanvas.height = h * ratio;
-	      tempCanvas.style.width = w + 'px';
-	      tempCanvas.style.height = h + 'px';
-	      tempCanvas.getContext('2d').setTransform(ratio, 0, 0, ratio, 0, 0);
-	      return tempCanvas;
-	    }
-	  }, {
-	    key: 'init',
-	    value: function init() {
-	      if (this.imageElement) {
-	        return;
-	      }
-	
-	      this.imageElement = document.createElement('div');
-	      this.imageElement.classList.add('image');
-	
-	      this.canvas = this.createHiDPICanvas(this.canvasWidth, this.canvasHeight, 4);
-	      this.canvas.classList.add('image-canvas');
-	      this.canvas.width = this.canvasWidth;
-	      this.canvas.height = this.canvasHeight;
-	      this.imageElement.appendChild(this.canvas);
-	      this.context = this.canvas.getContext('2d');
-	      animationUtils.setSmoothing(this.context);
-	
-	      this.logo = new Image();
-	      this.logo.src = assets.logoSrc;
-	    }
-	  }, {
-	    key: 'reinitFaces',
-	    value: function reinitFaces(json) {
-	      var _this3 = this;
-	
-	      _get(Object.getPrototypeOf(ImageElement.prototype), 'reinitFaces', this).call(this, json, function () {
-	        _this3.retraceCanvas();
-	        _this3.backgroundFill = 'blue';
-	        _this3.totalEmotions = 0;
-	        _this3.imageScale = 1;
-	        _this3.hexVertices = [];
-	        _this3.facesAndEmotions = faceUtils.generateFacesAndEmotions(_this3.faces);
-	        _this3.facesAndStrongestEmotions = faceUtils.generateFacesAndEmotions(_this3.faces, true);
-	        _this3.treatments = animationUtils.generateTreatments(_this3.facesAndStrongestEmotions);
-	        _this3.eyeMidpoints = faceUtils.generateEyeMidpoints(_this3.faces);
-	        _this3.faceBounds = faceUtils.generateFaceBounds(_this3.faces);
-	        _this3.allEyesCenter = faceUtils.generateAllEyesCenter(_this3.faces);
-	        var totalEmotions = 0;
-	        _this3.facesAndEmotions.forEach(function (face) {
-	          totalEmotions += Object.keys(face).length;
-	        });
-	        _this3.noEmotions = totalEmotions === 0;
-	        _this3.totalEmotions = totalEmotions;
-	        _this3.scrimAlpha = 0;
-	        _this3.fills = [];
-	        _this3.vignettePattern = null;
-	        _this3.resizedImageOffset = null;
-	        _this3.resizedImageScale = 0;
-	        _this3.auraAnimations = null;
-	        _this3.offsetX = 0;
-	        _this3.offsetY = 0;
-	      });
-	    }
-	  }, {
-	    key: 'loadImage',
-	    value: function loadImage(json, imgPath) {
-	      var _this4 = this;
-	
-	      this.reinitFaces(json);
-	
-	      var image = new Image();
-	      image.src = imgPath || this.imgPath;
-	
-	      image.onload = function () {
-	        _this4.image = image;
-	
-	        _this4.killAnimations();
-	        _this4.setImageScale();
-	        _this4.generateHexInfo();
-	        _this4.cleanUpImage();
-	      };
-	    }
-	  }, {
-	    key: 'drawScrim',
-	    value: function drawScrim() {
-	      var callback = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-	
-	      if (this.scrimAlpha === 0) {
-	        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	        this.context.drawImage(this.image, this.offsetX, this.offsetY, this.width, this.height, 0, 0, this.canvas.width, this.canvas.height);
-	      } else {
-	        this.context.globalAlpha = this.scrimAlpha * colorUtils.SCRIM_MAX_ALPHA;
-	        this.context.fillStyle = 'rgb(0, 0, 0)';
-	        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-	        this.context.globalAlpha = 1;
-	      }
-	      if (callback) {
-	        callback();
-	      }
-	    }
-	  }, {
-	    key: 'toGridCoords',
-	    value: function toGridCoords() {
-	      var value = arguments.length <= 0 || arguments[0] === undefined ? this.canvas.width : arguments[0];
-	      var axis = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-	
-	      var offset = 0;
-	      if (axis === 'x') {
-	        if (this.offsetX === 0 && this.resizedImageOffset) {
-	          offset = this.resizedImageOffset.x;
-	        } else {
-	          offset = this.offsetX;
-	        }
-	      } else if (axis === 'y') {
-	        if (this.offsetY === 0 && this.resizedImageOffset) {
-	          offset = this.resizedImageOffset.y;
-	        } else {
-	          offset = this.offsetY;
-	        }
-	      }
-	
-	      return (value - offset) / this.imageScale;
-	    }
-	  }, {
-	    key: 'applyFill',
-	    value: function applyFill(fill) {
-	      this.isDrawing = false;
-	      this.context.fillStyle = fill.style;
-	      this.context.globalCompositeOperation = fill.comp || 'source-over';
-	      this.context.globalAlpha = fill.alpha || 1;
-	
-	      this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-	
-	      this.context.globalCompositeOperation = 'source-over';
-	      this.context.globalAlpha = 1;
-	      this.isDrawing = false;
-	    }
-	  }, {
-	    key: 'getMultiAuraFill',
-	    value: function getMultiAuraFill() {
-	      var tempCanvas = this.createHiDPICanvas(this.canvasWidth, this.canvasHeight);
-	      tempCanvas.width = this.canvasWidth;
-	      tempCanvas.height = this.canvasHeight;
-	      var tempContext = tempCanvas.getContext('2d');
-	      animationUtils.setSmoothing(tempContext);
-	
-	      var gradientColors = this.treatments.groupAuraColors;
-	
-	      // no one in the group shows any emotion
-	      if (gradientColors.length === 0) {
-	        tempContext.save();
-	        tempContext.fillStyle = colorUtils.subAlpha(colorUtils.NEUTRAL, 0.35);
-	        tempContext.globalAlpha = 1;
-	        tempContext.globalCompositeOperation = 'source-over';
-	
-	        tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-	
-	        var solidPattern = tempContext.createPattern(tempCanvas, 'no-repeat');
-	
-	        tempContext.restore();
-	
-	        return solidPattern;
-	      } else if (gradientColors.length === 1) {
-	        // only one emotion in the entire group
-	        var gradient = this.createSimpleGradient(gradientColors[0], colorUtils.subAlpha(gradientColors[0], 0.2));
-	
-	        tempContext.save();
-	        tempContext.fillStyle = gradient;
-	        tempContext.globalAlpha = 1;
-	        tempContext.globalCompositeOperation = 'source-over';
-	
-	        tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-	
-	        var _gradientPattern = tempContext.createPattern(tempCanvas, 'no-repeat');
-	
-	        tempContext.restore();
-	
-	        return _gradientPattern;
-	      }
-	
-	      tempContext.save();
-	      // get total number of emotions to display, and then tween between their colors, degree by degree
-	      var degBetweenColors = 360 / gradientColors.length;
-	      var currOffset = 0;
-	      var offsetDeg = 30 - Math.floor(Math.random() * 36) + 135;
-	      var startOffset = 360 + offsetDeg;
-	      tempContext.globalCompositeOperation = animationUtils.BLEND_NORMAL;
-	
-	      tempContext.fillStyle = colorUtils.WHITE;
-	      tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-	
-	      tempContext.translate(this.eyesMidpoint.x, this.eyesMidpoint.y);
-	      tempContext.lineWidth = 1;
-	      tempContext.lineCap = 'round';
-	
-	      gradientColors.forEach(function (color, index, arr) {
-	        var nextColor = arr[(index + 1) % arr.length];
-	        var colorSplit = colorUtils.splitRGBA(color);
-	        var nextColorSplit = colorUtils.splitRGBA(nextColor);
-	        var rStep = (nextColorSplit.r - colorSplit.r) / degBetweenColors;
-	        var gStep = (nextColorSplit.g - colorSplit.g) / degBetweenColors;
-	        var bStep = (nextColorSplit.b - colorSplit.b) / degBetweenColors;
-	        currOffset = degBetweenColors * index + startOffset;
-	
-	        for (var currDeg = 0; currDeg < degBetweenColors; currDeg += single ? 0.01 : 0.02) {
-	          var actualCurrDeg = currDeg + currOffset + startOffset;
-	          tempContext.save();
-	          tempContext.rotate(Math.PI * actualCurrDeg * -1 / 180);
-	          tempContext.translate(tempContext.lineWidth / 2 * -1, tempContext.lineWidth / 2);
-	
-	          var currR = parseInt(colorSplit.r + currDeg * rStep, 10);
-	          var currG = parseInt(colorSplit.g + currDeg * gStep, 10);
-	          var currB = parseInt(colorSplit.b + currDeg * bStep, 10);
-	          var currA = 1;
-	          var currStyle = 'rgba(' + currR + ', ' + currG + ', ' + currB + ', ' + currA + ')';
-	
-	          tempContext.globalAlpha = currA;
-	
-	          tempContext.fillStyle = currStyle;
-	
-	          tempContext.fillRect(0, 0, 0.8, Math.max(tempCanvas.width, tempCanvas.height) * 2);
-	
-	          tempContext.restore();
-	        }
-	      });
-	
-	      var gradientPattern = tempContext.createPattern(tempCanvas, 'no-repeat');
-	
-	      tempContext.restore();
-	
-	      return gradientPattern;
-	    }
-	  }, {
-	    key: 'drawBackgroundWithAlpha',
-	    value: function drawBackgroundWithAlpha() {
-	      var alpha = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	
-	      this.context.save();
-	
-	      this.context.fillStyle = this.treatments.treatment.noEmotionScrim ? colorUtils.subAlpha(colorUtils.NEUTRAL, 0.25) : this.treatments.treatment.background;
-	      this.context.globalCompositeOperation = 'multiply';
-	      this.context.globalAlpha = alpha;
-	
-	      this.context.fill();
-	      this.context.restore();
-	    }
-	  }, {
-	    key: 'retraceCanvas',
-	    value: function retraceCanvas() {
-	      this.context.beginPath();
-	      this.context.moveTo(0, 0);
-	      this.context.lineTo(this.canvas.width, 0);
-	      this.context.lineTo(this.canvas.width, this.canvas.height);
-	      this.context.lineTo(0, this.canvas.height);
-	      this.context.lineTo(0, 0);
-	      this.context.closePath();
-	    }
-	  }, {
-	    key: 'drawVignetteWithAlpha',
-	    value: function drawVignetteWithAlpha() {
-	      var alpha = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	
-	      this.context.save();
-	
-	      this.context.fillStyle = this.vignettePattern;
-	      this.context.globalCompositeOperation = 'overlay';
-	      this.context.globalAlpha = alpha;
-	      this.context.fill();
-	      this.context.restore();
-	    }
-	  }, {
-	    key: 'animateInVignetteFrame',
-	    value: function animateInVignetteFrame() {
-	      var progress = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	
-	      if (this.treatments.treatment.noEmotionScrim) {
-	        this.redrawBaseImage();
-	
-	        this.cutOutHex();
-	        this.drawBackgroundWithAlpha(0.35);
-	      } else {
-	        var opacity = ease.expOut(0, 0.5, progress);
-	
-	        this.redrawBaseImage();
-	        this.cutOutHex();
-	
-	        this.drawBackgroundWithAlpha(0.25);
-	        this.drawVignetteWithAlpha(opacity);
-	
-	        this.context.restore();
-	      }
-	    }
-	  }, {
-	    key: 'animateInVignette',
-	    value: function animateInVignette() {
-	      var _this5 = this;
-	
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	
-	      if (!this.treatments.treatment.noEmotionScrim) {
-	
-	        this.context.save();
-	
-	        var vignetteGradient = this.createSimpleGradient(this.treatments.treatment.vignette.innerColor, this.treatments.treatment.vignette.outerColor, 0, false);
-	
-	        this.applyFill({
-	          style: colorUtils.TRANSPARENT
-	        });
-	        this.applyFill({
-	          style: vignetteGradient
-	        });
-	
-	        var vignetteLayer = this.canvas;
-	        this.vignettePattern = this.context.createPattern(vignetteLayer, 'no-repeat');
-	
-	        this.context.restore();
-	      }
-	
-	      if (duration === 0) {
-	        this.ifNotDrawing(function () {
-	          _this5.animateInVignetteFrame(1);
-	        });
-	      } else {
-	        (function () {
-	          var active = null;
-	          var progress = 0;
-	
-	          var vignetteTimeline = new Timeline({
-	            onStart: function onStart() {
-	              _this5.timelines.push(vignetteTimeline);
-	            },
-	            onComplete: function onComplete() {
-	              _get(Object.getPrototypeOf(ImageElement.prototype), 'killTimeline', _this5).call(_this5, vignetteTimeline);
-	              _this5.context.restore();
-	            }
-	          });
-	
-	          vignetteTimeline.to(_this5.canvas, duration, {
-	            onStart: function onStart() {
-	              active = vignetteTimeline.getActive()[0];
-	              _this5.tweens.push(active);
-	            },
-	            onUpdate: function onUpdate() {
-	              progress = active.progress();
-	              _this5.animateInVignetteFrame(progress);
-	            },
-	            onComplete: function onComplete() {
-	              _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this5).call(_this5, active);
-	            }
-	          });
-	        })();
-	      }
-	    }
-	  }, {
-	    key: 'animateInHaloFrame',
-	    value: function animateInHaloFrame() {
-	      var progress = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	
-	      if (this.treatments.treatment.noEmotionScrim) {
-	        this.redrawBaseImage();
-	        this.cutOutHex();
-	        this.drawBackgroundWithAlpha(0.35);
-	      } else {
-	        if (this.treatments.treatment.halo.outerColor === colorUtils.TRANSPARENT && this.treatments.treatment.halo.innerColor === colorUtils.TRANSPARENT) {
-	          return;
-	        }
-	        if (this.totalEmotions === 1) {
-	          this.redrawBaseImage();
-	          this.cutOutHex();
-	          this.context.save();
-	          this.drawBackgroundWithAlpha(0.25);
-	          this.drawVignetteWithAlpha(0.5);
-	
-	          var alpha = ease.expOut(0, 0.75, progress);
-	          var r = ease.expOut(this.canvas.height * 0.1, this.canvas.height * 1.6, progress);
-	
-	          var gradient = this.context.createRadialGradient(this.eyesMidpoint.x, this.eyesMidpoint.y, this.hexR, this.eyesMidpoint.x, this.eyesMidpoint.y, r);
-	
-	          gradient.addColorStop(0, this.treatments.treatment.halo.innerColor);
-	          if (this.treatments.treatment.halo.outerColor !== colorUtils.TRANSPARENT) {
-	            gradient.addColorStop(0.5, this.treatments.treatment.halo.outerColor);
-	          }
-	          gradient.addColorStop(1, colorUtils.TRANSPARENT);
-	
-	          this.context.fillStyle = gradient;
-	          this.context.globalCompositeOperation = 'source-over';
-	          this.context.globalAlpha = alpha;
-	
-	          this.context.fill();
-	
-	          this.context.restore();
-	        } else {
-	          var _alpha = ease.expOut(0.2, 0.5, progress);
-	          var _r = ease.expOut(0.1, 1.2, progress);
-	
-	          this.redrawBaseImage();
-	          this.cutOutHex();
-	          this.context.save();
-	
-	          this.drawBackgroundWithAlpha(0.25);
-	          this.drawVignetteWithAlpha(0.5);
-	
-	          this.context.fillStyle = this.createSimpleGradient(this.treatments.treatment.halo.outerColor, colorUtils.TRANSPARENT, _r, false);
-	          this.context.globalCompositeOperation = 'source-over';
-	          this.context.globalAlpha = _alpha;
-	
-	          this.context.fill();
-	
-	          var alpha2 = ease.expOut(0, 0.5, progress);
-	          var r2 = ease.expOut(0, this.hexR * (Object.keys(this.facesAndEmotions[0]).length === 1 ? this.treatments.treatment.halo.radius : 3) / this.canvas.height, progress);
-	          this.context.fillStyle = this.createSimpleGradient(colorUtils.subAlpha(this.treatments.treatment.halo.innerColor, Object.keys(this.facesAndEmotions[0]).length === 1 ? this.treatments.treatment.halo.alpha : 1), colorUtils.TRANSPARENT, r2, false, 0.3, 1);
-	          this.context.globalAlpha = alpha2;
-	          this.context.fill();
-	
-	          this.context.restore();
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'animateInHalo',
-	    value: function animateInHalo() {
-	      var _this6 = this;
-	
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	
-	      if (duration === 0) {
-	        if (!this.treatments.treatment.noEmotionScrim) {
-	          this.ifNotDrawing(function () {
-	            _this6.animateInHaloFrame();
-	          });
-	        }
-	      } else {
-	        (function () {
-	          var active = null;
-	          var progress = 0;
-	
-	          var haloTimeline = new Timeline({
-	            onStart: function onStart() {
-	              _this6.timelines.push(haloTimeline);
-	            },
-	            onComplete: function onComplete() {
-	              _get(Object.getPrototypeOf(ImageElement.prototype), 'killTimeline', _this6).call(_this6, haloTimeline);
-	              _this6.context.restore();
-	            }
-	          });
-	
-	          haloTimeline.to(_this6.canvas, duration, {
-	            onStart: function onStart() {
-	              _this6.context.save();
-	              active = haloTimeline.getActive()[0];
-	              _this6.tweens.push(active);
-	              _this6.context.restore();
-	            },
-	            onUpdate: function onUpdate() {
-	              if (!_this6.treatments.treatment.noEmotionScrim) {
-	                progress = active.progress();
-	                _this6.animateInHaloFrame(progress, _this6.treatments.treatment.halo.radius);
-	              }
-	            },
-	            onComplete: function onComplete() {
-	              _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this6).call(_this6, active);
-	            }
-	          });
-	        })();
-	      }
-	    }
-	  }, {
-	    key: 'animateInBackgroundFrame',
-	    value: function animateInBackgroundFrame() {
-	      var _this7 = this;
-	
-	      var progress = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	      var hexRadius = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
-	
-	      this.redrawBaseImage();
-	
-	      this.cutOutHex(false);
-	
-	      this.context.save();
-	      this.context.moveTo(0, 0);
-	      this.context.translate(this.eyesMidpoint.x, this.eyesMidpoint.y);
-	
-	      var points = geometryUtils.createRoundedHexagon(Math.max(this.hexR, hexRadius));
-	
-	      this.context.moveTo(Math.max(this.hexR, hexRadius), 0);
-	
-	      points.reverse();
-	
-	      points.forEach(function (vertex, i, vertices) {
-	        if (i % 2 === 0) {
-	          _this7.context.lineTo(vertex.x, vertex.y);
-	        } else {
-	          var prev = i === 0 ? vertices[vertices.length - 1] : vertices[i - 1];
-	          var xMid = (vertex.x + prev.x) / 2;
-	          var yMid = (vertex.y + prev.y) / 2;
-	          var r = geometryUtils.distanceFromCoords(prev, vertex) / 2;
-	
-	          var bigIndex = Math.floor(i / 2);
-	          if ([0, 4].includes(bigIndex)) {
-	            xMid -= r / 2;
-	          } else if ([1, 2].includes(bigIndex)) {
-	            xMid += r / 2;
-	          } else if ([5].includes(bigIndex)) {
-	            xMid -= r * Math.sqrt(3) / 2;
-	          } else if ([3].includes(bigIndex)) {
-	            xMid += r / 3;
-	          }
-	
-	          if ([5, 1].includes(bigIndex)) {
-	            yMid -= r / 2;
-	          } else if ([4].includes(bigIndex)) {
-	            yMid += r / 2;
-	          } else if ([0].includes(bigIndex)) {
-	            yMid -= r / 2;
-	          } else if ([3].includes(bigIndex)) {
-	            yMid += r / 2;
-	          }
-	
-	          var startAngle = (30 + bigIndex * 60 + 360) % 360;
-	          var endAngle = (startAngle + 60 + 360) % 360;
-	
-	          _this7.context.arc(xMid, yMid, r, startAngle / 360 * (Math.PI * 2), endAngle / 360 * (Math.PI * 2), false);
-	        }
-	      });
-	
-	      this.context.closePath();
-	      this.context.restore();
-	
-	      this.drawBackgroundWithAlpha(ease.square(0, 0.25, progress));
-	    }
-	  }, {
-	    key: 'animateInBackground',
-	    value: function animateInBackground() {
-	      var _this8 = this;
-	
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	
-	      var rEnd = this.canvas.width;
-	
-	      if (duration === 0) {
-	        this.ifNotDrawing(function () {
-	          _this8.animateInBackgroundFrame(1, rEnd);
-	        });
-	      } else {
-	        (function () {
-	          var active = null;
-	          var backgroundTimeline = new Timeline({
-	            onStart: function onStart() {
-	              _this8.timelines.push(backgroundTimeline);
-	            },
-	            onComplete: function onComplete() {
-	              _get(Object.getPrototypeOf(ImageElement.prototype), 'killTimeline', _this8).call(_this8, backgroundTimeline);
-	              _this8.context.restore();
-	            }
-	          });
-	
-	          var rStart = _this8.hexR;
-	          var progress = 0;
-	          var currR = rStart;
-	
-	          backgroundTimeline.to(_this8.canvas, duration, {
-	            onStart: function onStart() {
-	              active = backgroundTimeline.getActive()[0];
-	              _this8.tweens.push(active);
-	            },
-	            onUpdate: function onUpdate() {
-	              progress = active.progress();
-	              currR = ease.exp(rStart, rEnd, progress);
-	              _this8.animateInBackgroundFrame(progress, currR);
-	            },
-	            onComplete: function onComplete() {
-	              _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this8).call(_this8, active);
-	            }
-	          });
-	        })();
-	      }
-	    }
-	  }, {
-	    key: 'startAuraAnimations',
-	    value: function startAuraAnimations() {
-	      var _this9 = this;
-	
-	      this.auraAnimations = new Timeline({
-	        onComplete: function onComplete() {
-	          _get(Object.getPrototypeOf(ImageElement.prototype), 'killTimeline', _this9).call(_this9, _this9.auraAnimations);
-	        }
-	      });
-	
-	      var auraAnimStates = this.faces.length === 1 ? states.STATES_AURA_SINGLE : states.STATES_AURA_MULTIPLE;
-	
-	      auraAnimStates.forEach(function (state) {
-	        _this9.auraAnimations.to(_this9, Math.max(state.DURATION, animationUtils.MIN_DURATION), {
-	          onStart: function onStart() {
-	            if (_this9[state.NAME]) {
-	              _this9[state.NAME](state.DURATION);
-	            } else {
-	              _this9.pause(state.DURATION);
-	            }
-	          }
-	        });
-	      });
-	
-	      this.timelines.push(this.auraAnimations);
-	    }
-	  }, {
-	    key: 'fillInFeatheredCircle',
-	    value: function fillInFeatheredCircle(pattern, radius, feather) {
-	      var reverse = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
-	      var centered = arguments.length <= 4 || arguments[4] === undefined ? false : arguments[4];
-	
-	      var tempCanvas = this.createHiDPICanvas();
-	      tempCanvas.width = this.canvas.width;
-	      tempCanvas.height = this.canvas.height;
-	      var tempContext = tempCanvas.getContext('2d');
-	      animationUtils.setSmoothing(tempContext);
-	
-	      var x = centered ? this.canvas.width / 2 : this.eyesMidpoint.x;
-	      var y = centered ? this.canvas.height / 2 : this.eyesMidpoint.y;
-	
-	      var gradient = tempContext.createRadialGradient(x, y, 0, x, y, radius);
-	
-	      gradient.addColorStop(1 - feather / radius, reverse ? colorUtils.TRANSPARENT : colorUtils.BLACK);
-	      gradient.addColorStop(1, reverse ? colorUtils.BLACK : colorUtils.TRANSPARENT);
-	
-	      tempContext.fillStyle = gradient;
-	      tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-	
-	      tempContext.fillStyle = pattern;
-	      tempContext.globalCompositeOperation = 'source-in';
-	      tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-	
-	      var canvasPattern = tempContext.createPattern(tempCanvas, 'no-repeat');
-	
-	      return canvasPattern;
-	    }
-	  }, {
-	    key: 'animateInMultiAuraFrame',
-	    value: function animateInMultiAuraFrame() {
-	      var progress = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	      var startR = arguments.length <= 1 || arguments[1] === undefined ? this.canvas.width : arguments[1];
-	      var fill = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
-	      var comp = arguments.length <= 3 || arguments[3] === undefined ? animationUtils.BLEND_NORMAL : arguments[3];
-	
-	      if (!fill) {
-	        return;
-	      }
-	
-	      this.isDrawing = true;
-	
-	      var feather = ease.linear(0, startR, progress);
-	
-	      this.redrawBaseImage();
-	
-	      this.context.fillStyle = this.fillInFeatheredCircle(fill, startR, feather);
-	      this.context.globalAlpha = ease.expOut(0.4, 1, progress);
-	      this.context.globalCompositeOperation = comp;
-	
-	      this.cutOutHex();
-	
-	      this.context.fill();
-	
-	      this.context.fillStyle = this.fillInFeatheredCircle(fill, ease.expOut(this.hexR * 0.75, this.hexR * 1.25, progress), ease.exp(this.hexR * 0.25, this.hexR * 0.75, progress));
-	
-	      this.context.globalAlpha = ease.exp(0.3, 0.7, progress);
-	
-	      this.context.globalCompositeOperation = 'screen';
-	      this.context.fill();
-	
-	      this.context.globalCompositeOperation = 'color-burn';
-	      this.context.fill();
-	
-	      this.context.fillStyle = this.fillInFeatheredCircle(fill, ease.expOut(this.canvas.height * 2, this.canvas.height, progress), ease.exp(this.canvas.height, this.canvas.height - this.hexR / 2, progress), true, false);
-	
-	      this.context.globalAlpha = ease.exp(0, 0.6, progress);
-	
-	      this.context.globalCompositeOperation = 'multiply';
-	      this.context.fill();
-	
-	      this.context.fillStyle = this.fillInFeatheredCircle(colorUtils.BLACK, this.canvas.height, this.canvas.height / 6, true, true);
-	      this.context.globalAlpha = ease.exp(0, 0.05, progress);
-	      this.context.globalCompositeOperation = 'source-over';
-	      this.context.fill();
-	
-	      this.context.fillStyle = this.fillInFeatheredCircle(fill, this.canvas.height * 1.2, this.canvas.height / 5, true, true);
-	      this.context.globalAlpha = ease.exp(0, 1, progress);
-	      this.context.globalCompositeOperation = 'hard-light';
-	      this.context.fill();
-	
-	      this.isDrawing = false;
-	    }
-	  }, {
-	    key: 'animateInMultiAura',
-	    value: function animateInMultiAura() {
-	      var _this10 = this;
-	
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	
-	      var fill = null;
-	      var comp = this.treatments.groupAuraColors.length > 0 ? 'screen' : 'lighten';
-	      var startR = this.toGridCoords(this.faceBounds.right - this.faceBounds.left) / 2;
-	
-	      if (duration === 0) {
-	        this.ifNotDrawing(function () {
-	          _this10.animateInMultiAuraFrame(1, _this10.canvas.width, _this10.getMultiAuraFill(), comp);
-	        });
-	      } else {
-	        (function () {
-	          var active = null;
-	
-	          var auraTimeline = new Timeline({
-	            onStart: function onStart() {
-	              _this10.timelines.push(auraTimeline);
-	            },
-	            onComplete: function onComplete() {
-	              _this10.killTimeline(auraTimeline);
-	            }
-	          });
-	          auraTimeline.to(_this10.canvas, duration, {
-	            onStart: function onStart() {
-	              active = auraTimeline.getActive()[0];
-	              fill = _this10.getMultiAuraFill();
-	              _this10.fills = [fill];
-	              _this10.isDrawing = false;
-	              _this10.tweens.push(active);
-	            },
-	            onUpdate: function onUpdate() {
-	              var progress = active.progress();
-	              var r = ease.exp(startR, _this10.canvas.width, progress);
-	
-	              _this10.animateInMultiAuraFrame(progress, r, _this10.fills[0], comp);
-	            },
-	            onComplete: function onComplete() {
-	              _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this10).call(_this10, active);
-	            }
-	          });
-	        })();
-	      }
-	    }
-	  }, {
-	    key: 'personalColor',
-	    value: function personalColor() {
-	      var _this11 = this;
-	
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	
-	      var fillColors = this.treatments.personalAuraColors[this.currFace];
-	      this.fills = [];
-	
-	      // maybe have scrim pulse instead of just drawing?
-	      if (fillColors.length === 1) {
-	        this.applyFill({
-	          style: fillColors[0],
-	          comp: 'multiply',
-	          alpha: 0.35
-	        });
-	        this.redrawCurrentCanvas();
-	      } else {
-	        (function () {
-	          var colorTimeline = new Timeline({
-	            onStart: function onStart() {
-	              _this11.timelines.push(colorTimeline);
-	            },
-	            onComplete: function onComplete() {
-	              _get(Object.getPrototypeOf(ImageElement.prototype), 'killTimeline', _this11).call(_this11, colorTimeline);
-	            }
-	          });
-	
-	          var active = null;
-	          var gradient = null;
-	
-	          colorTimeline.to(_this11.canvas, duration * 0.75, {
-	            onStart: function onStart() {
-	              active = colorTimeline.getActive()[0];
-	              _this11.tweens.push(active);
-	            },
-	            onUpdate: function onUpdate() {
-	              _this11.redrawCurrentCanvas();
-	
-	              var progress = active.progress();
-	              var opacity = ease.expOut(0.5, 1, progress);
-	              var radius = ease.expOut(0, 1, progress);
-	
-	              gradient = _this11.createSimpleGradient(fillColors[0], fillColors[1], radius);
-	
-	              _this11.applyFill({
-	                style: gradient,
-	                comp: 'screen',
-	                alpha: opacity
-	              });
-	            },
-	            onComplete: function onComplete() {
-	              _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this11).call(_this11, active);
-	            }
-	          });
-	          colorTimeline.to(_this11.canvas, duration * 0.25, {
-	            onStart: function onStart() {
-	              active = colorTimeline.getActive()[0];
-	              _this11.redrawCurrentCanvas();
-	
-	              _this11.applyFill({
-	                style: gradient,
-	                comp: 'screen',
-	                alpha: 1
-	              });
-	
-	              _this11.tweens.push(active);
-	            },
-	            onUpdate: function onUpdate() {
-	              var progress = active.progress();
-	              var opacity = ease.square(1, 0, progress);
-	
-	              _this11.redrawCurrentCanvas();
-	
-	              _this11.applyFill({
-	                style: gradient,
-	                comp: 'screen',
-	                alpha: opacity
-	              });
-	            },
-	            onComplete: function onComplete() {
-	              _this11.redrawCurrentCanvas();
-	              _this11.isDrawing = false;
-	              _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this11).call(_this11, active);
-	            }
-	          });
-	        })();
-	      }
-	    }
-	  }, {
-	    key: 'createSimpleGradient',
-	    value: function createSimpleGradient() {
-	      var centerColor = arguments.length <= 0 || arguments[0] === undefined ? colorUtils.WHITE : arguments[0];
-	      var edgeColor = arguments.length <= 1 || arguments[1] === undefined ? colorUtils.BLACK : arguments[1];
-	      var radiusFactor = arguments.length <= 2 || arguments[2] === undefined ? 1 : arguments[2];
-	      var centered = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
-	      var colorstop1 = arguments.length <= 4 || arguments[4] === undefined ? 0 : arguments[4];
-	      var colorstop2 = arguments.length <= 5 || arguments[5] === undefined ? 1 : arguments[5];
-	
-	      var x = centered ? this.canvas.width / 2 : this.eyesMidpoint.x;
-	      var y = centered ? this.canvas.height / 2 : this.eyesMidpoint.y;
-	
-	      var gradient = this.context.createRadialGradient(x, y, 0, x, y, this.canvas.height * (radiusFactor || 1));
-	
-	      gradient.addColorStop(colorstop1, centerColor);
-	      gradient.addColorStop(colorstop2, edgeColor);
-	
-	      return gradient;
-	    }
-	  }, {
-	    key: 'emotion',
-	    value: function emotion(duration) {
-	      var _this12 = this;
-	
-	      this.scrimAlpha = 0;
-	
-	      this.ifNotDrawing(function () {
-	        _this12.drawScrim();
-	        if (_this12.faces.length > 1) {
-	          _this12.personalColor(duration);
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'fillBackground',
-	    value: function fillBackground() {
-	      this.context.fillStyle = this.backgroundFill;
-	      this.context.globalAlpha = 1;
-	      this.context.globalCompositeOperation = 'source-over';
-	      this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-	    }
-	  }, {
-	    key: 'redrawCurrentCanvas',
-	    value: function redrawCurrentCanvas() {
-	      this.retraceCanvas();
-	      this.context.globalAlpha = 1;
-	      this.context.globalCompositeOperation = 'source-over';
-	      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	      this.context.fillStyle = this.canvasSnapshot;
-	      this.context.fill();
-	    }
-	  }, {
-	    key: 'redrawBaseImage',
-	    value: function redrawBaseImage() {
-	      this.retraceCanvas();
-	      this.context.globalAlpha = 1;
-	      this.context.globalCompositeOperation = 'source-over';
-	      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	
-	      this.fillBackground();
-	
-	      if (single && (this.offsetY < 0 || this.offsetX < 0)) {
-	        this.offsetX = (this.subRect.width - this.image.width) / 2 / this.resizedImageScale;
-	        this.offsetY = (this.subRect.height - this.image.height) / this.resizedImageScale;
-	
-	        this.context.drawImage(this.image, 0, 0, this.image.width, this.image.height, this.offsetX, this.offsetY, this.canvas.width - 2 * this.offsetX, this.canvas.height - this.offsetY);
-	
-	        this.resizedImageOffset = {
-	          x: this.offsetX * -1 * this.resizedImageScale,
-	          y: this.offsetY * -1 * this.resizedImageScale
-	        };
-	
-	        if (this.backgroundFill === 'blue' || this.backgroundFill === 'rgba(0, 0, 255, 1)') {
-	          var dataSample = animationUtils.getSquareColorSample(this.canvas, 10, new geometryUtils.Point(this.canvas.width / 2, this.offsetY));
-	          this.backgroundFill = dataSample;
-	          this.redrawBaseImage();
-	        }
-	      } else {
-	        this.context.drawImage(this.image, this.offsetX, this.offsetY, this.subRect.width, this.subRect.height, 0, 0, this.canvas.width, this.canvas.height);
-	        if (this.backgroundFill === 'blue' || this.backgroundFill === 'rgba(0, 0, 255, 1)') {
-	          var sampleOffset = 1;
-	          if (this.resizedImageScale) {
-	            sampleOffset = this.imageScale / this.resizedImageScale;
-	          }
-	
-	          var _dataSample = animationUtils.getSquareColorSample(this.canvas, 10, new geometryUtils.Point(Math.min(this.canvas.width / 2, Math.abs(this.offsetX)), Math.min(this.offsetY, 0) * -1 * sampleOffset));
-	
-	          this.backgroundFill = _dataSample;
-	          this.redrawBaseImage();
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'createHexR',
-	    value: function createHexR() {
-	      var r = 1;
-	      var baseDistance = geometryUtils.distanceFromCoords(new geometryUtils.Point(this.faceBounds.left, this.faceBounds.bottom), new geometryUtils.Point(this.faceBounds.right, this.faceBounds.top));
-	
-	      if (this.resizedImageScale) {
-	        r = baseDistance / this.resizedImageScale / Math.sqrt(3);
-	      } else {
-	        r = this.toGridCoords(baseDistance) / Math.sqrt(3);
-	      }
-	
-	      if (this.facesAndEmotions.length === 1) {
-	        r *= 1.5;
-	      }
-	
-	      return r;
-	    }
-	  }, {
-	    key: 'createHexVertices',
-	    value: function createHexVertices() {
-	      var radius = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	
-	      return geometryUtils.createRoundedHexagon(radius, radius / 6);
-	    }
-	  }, {
-	    key: 'cutOutHex',
-	    value: function cutOutHex() {
-	      var _this13 = this;
-	
-	      var closePath = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
-	
-	      this.context.save();
-	
-	      this.context.beginPath();
-	      if (closePath) {
-	        this.context.moveTo(0, 0);
-	        this.context.lineTo(this.canvas.width, 0);
-	        this.context.lineTo(this.canvas.width, this.canvas.height);
-	        this.context.lineTo(0, this.canvas.height);
-	        this.context.lineTo(0, 0);
-	      }
-	
-	      this.context.translate(this.eyesMidpoint.x, this.eyesMidpoint.y);
-	      this.context.rotate(0);
-	
-	      this.hexVertices.forEach(function (vertex, i, vertices) {
-	        if (i === 0) {
-	          _this13.context.moveTo(vertex.x, vertex.y);
-	          return;
-	        }
-	        if (i % 2 === 0) {
-	          _this13.context.lineTo(vertex.x, vertex.y);
-	        } else {
-	          var prev = i === 0 ? vertices[vertices.length - 1] : vertices[i - 1];
-	          var xMid = (vertex.x + prev.x) / 2;
-	          var yMid = (vertex.y + prev.y) / 2;
-	          var r = geometryUtils.distanceFromCoords(prev, vertex) / 2;
-	
-	          var bigIndex = Math.floor(i / 2);
-	          if ([5].includes(bigIndex)) {
-	            xMid -= r * (Math.sqrt(3) / 3);
-	          } else if ([2, 3].includes(bigIndex)) {
-	            xMid += r * (Math.sqrt(3) / 3);
-	          } else if ([4].includes(bigIndex)) {
-	            xMid += r * (Math.sqrt(2) / 4);
-	          } else if ([1].includes(bigIndex)) {
-	            xMid -= r * (Math.sqrt(2) / 4);
-	          } else if ([0].includes(bigIndex)) {
-	            xMid -= r * (Math.sqrt(3) / 3);
-	          }
-	
-	          if ([1, 2].includes(bigIndex)) {
-	            yMid += r / 2;
-	          } else if ([4, 5].includes(bigIndex)) {
-	            yMid -= r / 2;
-	          }
-	
-	          var startAngle = (30 + bigIndex * -1 * 60 + 360) % 360;
-	          var endAngle = (startAngle - 60 + 360) % 360;
-	
-	          _this13.context.arc(xMid, yMid, r, startAngle / 360 * (Math.PI * 2), endAngle / 360 * (Math.PI * 2), true);
-	        }
-	      });
-	
-	      if (closePath) {
-	        this.context.closePath();
-	      }
-	      this.context.restore();
-	    }
-	  }, {
-	    key: 'flash',
-	    value: function flash() {
-	      var _this14 = this;
-	
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-	
-	      var thisTimeline = new Timeline({
-	        onComplete: function onComplete() {
-	          _get(Object.getPrototypeOf(ImageElement.prototype), 'killTimeline', _this14).call(_this14, thisTimeline);
-	        }
-	      });
-	      var origBrightness = 100;
-	      var currBrightness = origBrightness;
-	      var targetBrightness = 200;
-	
-	      var flashUpTime = duration * 0.2;
-	      var flashDownTime = duration - flashUpTime;
-	
-	      var currActive = null;
-	      thisTimeline.to(this.canvas, flashUpTime, {
-	        onStart: function onStart() {
-	          currActive = thisTimeline.getActive()[0];
-	          _this14.tweens.push(currActive);
-	        },
-	        onUpdate: function onUpdate() {
-	          if (currActive) {
-	            currBrightness = origBrightness + (targetBrightness - origBrightness) * Math.pow(currActive.progress(), 2);
-	            Tween.set(_this14.canvas, {
-	              css: {
-	                '-webkit-filter': 'brightness(' + currBrightness + '%)'
-	              }
-	            });
-	          }
-	        },
-	        onComplete: function onComplete() {
-	          _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this14).call(_this14, currActive);
-	        }
-	      });
-	      thisTimeline.to(this.canvas, flashDownTime, {
-	        onStart: function onStart() {
-	          currActive = thisTimeline.getActive()[0];
-	          _this14.tweens.push(currActive);
-	        },
-	        onUpdate: function onUpdate() {
-	          if (currActive) {
-	            currBrightness = targetBrightness - (targetBrightness - origBrightness) * Math.pow(currActive.progress(), 2);
-	            Tween.set(_this14.canvas, {
-	              css: {
-	                '-webkit-filter': 'brightness(' + currBrightness + '%)'
-	              }
-	            });
-	          }
-	        },
-	        onComplete: function onComplete() {
-	          _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this14).call(_this14, currActive);
-	        }
-	      });
-	      thisTimeline.to(this.canvas, 0, {
-	        clearProps: '-webkit-filter'
-	      });
-	
-	      this.timelines.push(thisTimeline);
-	    }
-	  }, {
-	    key: 'zoom',
-	    value: function zoom() {
-	      var _this15 = this;
-	
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	      var zoomOut = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
-	
-	      var topLeft = new geometryUtils.Point(utils.thisOrZero(this.json[this.currFace].boundingPoly.vertices[0].x), utils.thisOrZero(this.json[this.currFace].boundingPoly.vertices[0].y));
-	
-	      var width = Math.abs(topLeft.x - utils.thisOrZero(this.json[this.currFace].boundingPoly.vertices[1].x));
-	      width += geometryUtils.createPadding(width);
-	
-	      var height = Math.abs(topLeft.y - utils.thisOrZero(this.json[this.currFace].boundingPoly.vertices[2].y));
-	      height += geometryUtils.createPadding(height);
-	
-	      var centerX = topLeft.x + width / 2;
-	      var centerY = topLeft.y + height / 2;
-	
-	      if (height > width) {
-	        width = this.canvas.width / this.canvas.height * height;
-	      } else {
-	        height = this.canvas.height / this.canvas.width * width;
-	      }
-	
-	      var targetLeft = Math.max(centerX - width / 2, 0);
-	      var targetTop = Math.max(centerY - height / 2, 0);
-	
-	      if (zoomOut) {
-	        width = this.subRect.width;
-	        height = this.subRect.height;
-	
-	        targetLeft = this.resizedImageOffset ? this.resizedImageOffset.x : 0;
-	        targetTop = this.resizedImageOffset ? this.resizedImageOffset.y : 0;
-	      }
-	
-	      if (duration === 0) {
-	        this.ifNotDrawing(function () {
-	          _this15.isDrawing = false;
-	
-	          _this15.context.clearRect(0, 0, _this15.canvas.width, _this15.canvas.height);
-	
-	          _this15.fillBackground();
-	
-	          _this15.context.drawImage(_this15.image, targetLeft, targetTop, _this15.width, _this15.height, 0, 0, _this15.canvas.width, _this15.canvas.height);
-	          _this15.offsetX = targetLeft;
-	          _this15.offsetY = targetTop;
-	          _this15.width = width;
-	          _this15.height = height;
-	          _this15.imageScale = width / _this15.canvas.width;
-	          if (zoomOut) {
-	            _this15.eyesMidpoint = _this15.pointToGridCoords(_this15.allEyesCenter);
-	          } else {
-	            _this15.eyesMidpoint = _this15.pointToGridCoords(_this15.eyeMidpoints[_this15.currFace]);
-	          }
-	
-	          _this15.canvasSnapshot = _this15.context.createPattern(_this15.canvas, 'no-repeat');
-	
-	          _this15.isDrawing = false;
-	        });
-	      } else {
-	        (function () {
-	          var tween = Tween.to(_this15.canvas, duration, {
-	            onStart: function onStart() {
-	              _this15.isDrawing = false;
-	              _this15.tweens.push(tween);
-	            },
-	            onUpdate: function onUpdate() {
-	              var prog = tween.progress();
-	              var currX = _this15.offsetX - (_this15.offsetX - targetLeft) * prog;
-	              var currY = _this15.offsetY - (_this15.offsetY - targetTop) * prog;
-	
-	              var currWidth = _this15.width - (_this15.width - width) * prog;
-	              var currHeight = _this15.height - (_this15.height - height) * prog;
-	
-	              _this15.context.clearRect(0, 0, _this15.canvas.width, _this15.canvas.height);
-	
-	              _this15.fillBackground();
-	
-	              _this15.context.drawImage(_this15.image, currX, currY, currWidth, currHeight, 0, 0, _this15.canvas.width, _this15.canvas.height);
-	            },
-	            onComplete: function onComplete() {
-	              _this15.offsetX = targetLeft;
-	              _this15.offsetY = targetTop;
-	              _this15.width = width;
-	              _this15.height = height;
-	              _this15.imageScale = width / _this15.canvas.width;
-	              if (zoomOut) {
-	                _this15.eyesMidpoint = _this15.pointToGridCoords(_this15.allEyesCenter);
-	              } else {
-	                _this15.eyesMidpoint = _this15.pointToGridCoords(_this15.eyeMidpoints[_this15.currFace]);
-	              }
-	              _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this15).call(_this15, tween);
-	
-	              _this15.isDrawing = false;
-	              _this15.canvasSnapshot = _this15.context.createPattern(_this15.canvas, 'no-repeat');
-	            }
-	          });
-	          _this15.tweens.push(tween);
-	        })();
-	      }
-	    }
-	  }, {
-	    key: 'zoomOut',
-	    value: function zoomOut() {
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	
-	      this.zoom(duration, true);
-	    }
-	  }, {
-	    key: 'drawPoint',
-	    value: function drawPoint(point) {
-	      var alpha = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
-	      var isLast = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
-	
-	      this.isDrawing = false;
-	
-	      var x = this.toGridCoords(point.position.x, 'x');
-	      var y = this.toGridCoords(point.position.y, 'y');
-	
-	      this.context.beginPath();
-	      this.context.fillStyle = 'rgba(255, 255, 255, ' + alpha + ')';
-	      this.context.arc(x, y, 3, 0, Math.PI * 2);
-	      this.context.fill();
-	      this.context.closePath();
-	
-	      if (isLast) {
-	        this.isDrawing = false;
-	      }
-	    }
-	  }, {
-	    key: 'pointToGridCoords',
-	    value: function pointToGridCoords() {
-	      var point = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-	
-	      if (!point) {
-	        return new geometryUtils.Point(0, 0);
-	      }
-	
-	      return new geometryUtils.Point(this.toGridCoords(point.x, 'x'), this.toGridCoords(point.y, 'y'));
-	    }
-	  }, {
-	    key: 'ifNotDrawing',
-	    value: function ifNotDrawing(callback) {
-	      var _this16 = this;
-	
-	      requestAnimationFrame(function () {
-	        if (_this16.isDrawing) {
-	          _this16.ifNotDrawing(callback);
-	        } else {
-	          callback();
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'drawPoints',
-	    value: function drawPoints() {
-	      var _this17 = this;
-	
-	      var points = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-	      var alpha = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
-	
-	      if (points.length === 0) {
-	        return;
-	      }
-	
-	      this.ifNotDrawing(function () {
-	        _this17.context.clearRect(0, 0, _this17.canvas.width, _this17.canvas.height);
-	        _this17.context.drawImage(_this17.image, _this17.offsetX, _this17.offsetY, _this17.width, _this17.height, 0, 0, _this17.canvas.width, _this17.canvas.height);
-	        _this17.drawScrim(function () {
-	          points.forEach(function (point, index) {
-	            _this17.drawPoint(point, alpha, index === points.length - 1);
-	          });
-	        });
-	      });
-	    }
-	  }, {
-	    key: 'drawRect',
-	    value: function drawRect(topLeft, width, height) {
-	      var _this18 = this;
-	
-	      var alpha = arguments.length <= 3 || arguments[3] === undefined ? 1 : arguments[3];
-	
-	      this.ifNotDrawing(function () {
-	        _this18.context.clearRect(0, 0, _this18.canvas.width, _this18.canvas.height);
-	        _this18.context.drawImage(_this18.image, _this18.offsetX, _this18.offsetY, _this18.width, _this18.height, 0, 0, _this18.canvas.width, _this18.canvas.height);
-	        _this18.drawScrim(function () {
-	          var x = _this18.toGridCoords(topLeft.x, 'x');
-	          var y = _this18.toGridCoords(topLeft.y, 'y');
-	          var w = _this18.toGridCoords(width);
-	          var h = _this18.toGridCoords(height);
-	
-	          _this18.context.strokeStyle = 'rgba(255, 255, 255, ' + alpha + ')';
-	          _this18.context.lineWidth = 5;
-	          _this18.context.strokeRect(x, y, w, h);
-	        });
-	      });
-	    }
-	  }, {
-	    key: 'face',
-	    value: function face() {
-	      var _this19 = this;
-	
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 3 : arguments[0];
-	
-	      var boundingPoly = this.json[this.currFace].fdBoundingPoly;
-	      var topLeft = boundingPoly.vertices[0];
-	      var width = Math.abs(topLeft.x - boundingPoly.vertices[1].x);
-	      var height = Math.abs(topLeft.y - boundingPoly.vertices[2].y);
-	
-	      var timeline = new Timeline({
-	        onComplete: function onComplete() {
-	          _get(Object.getPrototypeOf(ImageElement.prototype), 'killTimeline', _this19).call(_this19, timeline);
-	        }
-	      });
-	      var active = null;
-	      var prog = 0;
-	
-	      timeline.to(this.canvas, animationUtils.POINTS_FADE_DURATION, {
-	        onStart: function onStart() {
-	          _this19.scrimAlpha = 1;
-	          _this19.context.globalAlpha = 1;
-	          _this19.context.globalCompositeOperation = 'source-over';
-	          active = timeline.getActive()[0];
-	          _this19.tweens.push(active);
-	        },
-	        onUpdate: function onUpdate() {
-	          prog = active.progress();
-	          _this19.isDrawing = false;
-	          _this19.drawRect(topLeft, width, height, prog);
-	        },
-	        onComplete: function onComplete() {
-	          _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this19).call(_this19, active);
-	        }
-	      });
-	      timeline.to(this.canvas, duration - animationUtils.POINTS_FADE_DURATION * 2, {
-	        onStart: function onStart() {
-	          _this19.drawRect(topLeft, width, height, 1);
-	        }
-	      });
-	      timeline.to(this.canvas, animationUtils.POINTS_FADE_DURATION, {
-	        onStart: function onStart() {
-	          active = timeline.getActive()[0];
-	          _this19.tweens.push(active);
-	        },
-	        onUpdate: function onUpdate() {
-	          prog = active.progress();
-	          _this19.drawRect(topLeft, width, height, 1 - prog);
-	        },
-	        onComplete: function onComplete() {
-	          _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this19).call(_this19, active);
-	        }
-	      });
-	
-	      this.timelines.push(timeline);
-	    }
-	  }, {
-	    key: 'drawPointsWithAnim',
-	    value: function drawPointsWithAnim(points, duration) {
-	      var _this20 = this;
-	
-	      var timeline = new Timeline({
-	        onComplete: function onComplete() {
-	          _get(Object.getPrototypeOf(ImageElement.prototype), 'killTimeline', _this20).call(_this20, timeline);
-	        }
-	      });
-	
-	      var active = null;
-	      var prog = 0;
-	      timeline.to(this.canvas, animationUtils.POINTS_FADE_DURATION, {
-	        onStart: function onStart() {
-	          active = timeline.getActive()[0];
-	          _this20.tweens.push(active);
-	        },
-	        onUpdate: function onUpdate() {
-	          prog = active.progress();
-	          _this20.drawPoints(points, prog);
-	        },
-	        onComplete: function onComplete() {
-	          _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this20).call(_this20, active);
-	        }
-	      });
-	      timeline.to(this.canvas, duration - animationUtils.POINTS_FADE_DURATION * 2, {
-	        onStart: function onStart() {
-	          active = timeline.getActive()[0];
-	          _this20.tweens.push(active);
-	        },
-	        onUpdate: function onUpdate() {
-	          _this20.drawPoints(points);
-	        },
-	        onComplete: function onComplete() {
-	          _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this20).call(_this20, active);
-	        }
-	      });
-	      timeline.to(this.canvas, animationUtils.POINTS_FADE_DURATION, {
-	        onStart: function onStart() {
-	          active = timeline.getActive()[0];
-	          _this20.tweens.push(active);
-	        },
-	        onUpdate: function onUpdate() {
-	          prog = active.progress();
-	          _this20.drawPoints(points, 1 - prog);
-	        },
-	        onComplete: function onComplete() {
-	          _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this20).call(_this20, active);
-	        }
-	      });
-	
-	      this.timelines.push(timeline);
-	    }
-	  }, {
-	    key: 'drawChromeFrame',
-	    value: function drawChromeFrame() {
-	      var progress = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	      var height = arguments.length <= 1 || arguments[1] === undefined ? 112 : arguments[1];
-	      var callback = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
-	
-	      this.context.globalCompositeOperation = 'source-over';
-	      this.context.fillStyle = 'rgba(255, 255, 255, ' + progress + ')';
-	      this.context.fillRect(0, this.canvas.height - height, this.canvas.width, height);
-	
-	      if (callback) {
-	        callback();
-	      }
-	    }
-	  }, {
-	    key: 'drawChrome',
-	    value: function drawChrome() {
-	      var _this21 = this;
-	
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 2 : arguments[0];
-	
-	      var height = 0;
-	      if (single) {
-	        height = animationUtils.CHROME_SHORT_HEIGHT;
-	      } else {
-	        height = this.totalEmotions <= animationUtils.CHROME_MAX_ITEMS / animationUtils.CHROME_MAX_ROWS ? animationUtils.CHROME_SHORT_HEIGHT : animationUtils.CHROME_TALL_HEIGHT;
-	      }
-	      if (duration === 0) {
-	        this.ifNotDrawing(function () {
-	          if (_this21.totalEmotions > 0) {
-	            _this21.drawChromeFrame(1, height, function () {
-	              var tick = 0;
-	              _this21.facesAndEmotions.forEach(function (person) {
-	                for (var emotion in person) {
-	                  _this21.drawChromeHex(height, emotion, person[emotion], tick, 1);
-	                  tick++;
-	                }
-	              });
-	              _this21.context.globalCompositeOperation = 'overlay';
-	              _this21.context.drawImage(_this21.logo, _this21.logoLeft, _this21.logoTop, single ? _this21.logoWidth * 1.5 : _this21.logoWidth, single ? _this21.logoHeight * 1.5 : _this21.logoHeight);
-	              _this21.context.globalCompositeOperation = 'source-over';
-	            });
-	          } else {
-	            _this21.context.globalCompositeOperation = 'overlay';
-	            _this21.context.drawImage(_this21.logo, _this21.logoLeft, _this21.logoTop, single ? _this21.logoWidth * 1.5 : _this21.logoWidth, single ? _this21.logoHeight * 1.5 : _this21.logoHeight);
-	            _this21.context.globalCompositeOperation = 'source-over';
-	          }
-	        });
-	      } else {
-	        (function () {
-	          var timeline = new Timeline({
-	            onComplete: function onComplete() {
-	              _get(Object.getPrototypeOf(ImageElement.prototype), 'killTimeline', _this21).call(_this21, timeline);
-	            }
-	          });
-	          var currActive = null;
-	          var tick = -1;
-	          _this21.canvasSnapshot = _this21.context.createPattern(_this21.canvas, 'no-repeat');
-	          _this21.redrawCurrentCanvas();
-	          if (_this21.totalEmotions > 0) {
-	            timeline.to(_this21, animationUtils.EMOTION_HEX_FADE_DURATION / _this21.timeFactor, {
-	              onStart: function onStart() {
-	                currActive = timeline.getActive()[0];
-	                _this21.tweens.push(currActive);
-	              },
-	              onUpdate: function onUpdate() {
-	                var progress = currActive.progress();
-	                _this21.drawChromeFrame(progress, height);
-	              },
-	              onComplete: function onComplete() {
-	                _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this21).call(_this21, currActive);
-	              }
-	            });
-	
-	            _this21.facesAndEmotions.forEach(function (person) {
-	              var _loop = function _loop(emotion) {
-	                timeline.to(_this21, animationUtils.EMOTION_HEX_FADE_DURATION / _this21.timeFactor, {
-	                  onStart: function onStart() {
-	                    currActive = timeline.getActive()[0];
-	                    _this21.tweens.push(currActive);
-	                    tick++;
-	                    _this21.canvasSnapshot = _this21.context.createPattern(_this21.canvas, 'no-repeat');
-	                  },
-	                  onUpdate: function onUpdate() {
-	                    _this21.redrawCurrentCanvas();
-	                    _this21.drawChromeHex(height, emotion, person[emotion], tick, currActive.progress());
-	                  },
-	                  onComplete: function onComplete() {
-	                    _this21.redrawCurrentCanvas();
-	                    _this21.drawChromeHex(height, emotion, person[emotion], tick, 1);
-	                    _get(Object.getPrototypeOf(ImageElement.prototype), 'killTween', _this21).call(_this21, currActive);
-	                    _this21.canvasSnapshot = _this21.context.createPattern(_this21.canvas, 'no-repeat');
-	                  }
-	                });
-	              };
-	
-	              for (var emotion in person) {
-	                _loop(emotion);
-	              }
-	            });
-	          }
-	          timeline.to(_this21, animationUtils.EMOTION_HEX_FADE_DURATION / _this21.timeFactor, {
-	            onStart: function onStart() {
-	              currActive = timeline.getActive()[0];
-	            },
-	            onUpdate: function onUpdate() {
-	              _this21.redrawCurrentCanvas();
-	              _this21.context.globalCompositeOperation = 'overlay';
-	              _this21.context.globalAlpha = ease.exp(0, 1, currActive.progress());
-	              _this21.context.drawImage(_this21.logo, _this21.logoLeft, _this21.logoTop, _this21.logoWidth, _this21.logoHeight);
-	              _this21.context.globalCompositeOperation = 'source-over';
-	            }
-	          });
-	
-	          _this21.timelines.push(timeline);
-	        })();
-	      }
-	    }
-	  }, {
-	    key: 'drawChromeHex',
-	    value: function drawChromeHex(height, emotion, strength, num, progress) {
-	      var _this22 = this;
-	
-	      var radius = arguments.length <= 5 || arguments[5] === undefined ? animationUtils.CHROME_HEX_RADIUS : arguments[5];
-	
-	      if (num >= animationUtils.CHROME_MAX_ITEMS) {
-	        return;
-	      }
-	
-	      this.retraceCanvas();
-	
-	      var x = 0;
-	      var y = 0;
-	      if (single) {
-	        x = animationUtils.CHROME_HORIZONTAL_PADDING + num % animationUtils.CHROME_MAX_ITEMS * animationUtils.BACKEND_CHROME_ITEM_WIDTH;
-	        y = this.canvas.height - height + animationUtils.CHROME_VERTICAL_PADDING + Math.floor(num / animationUtils.CHROME_MAX_ITEMS) * animationUtils.CHROME_SINGLE_LINE_HEIGHT + Math.floor(num / animationUtils.CHROME_MAX_ITEMS) * animationUtils.CHROME_SPACE_BETWEEN_LINES;
-	      } else {
-	        x = animationUtils.CHROME_HORIZONTAL_PADDING + num % (animationUtils.CHROME_MAX_ITEMS / animationUtils.CHROME_MAX_ROWS) * animationUtils.CHROME_ITEM_WIDTH;
-	        y = this.canvas.height - height + animationUtils.CHROME_VERTICAL_PADDING + Math.floor(num / (animationUtils.CHROME_MAX_ITEMS / animationUtils.CHROME_MAX_ROWS)) * animationUtils.CHROME_SINGLE_LINE_HEIGHT + Math.floor(num / (animationUtils.CHROME_MAX_ITEMS / animationUtils.CHROME_MAX_ROWS)) * animationUtils.CHROME_SPACE_BETWEEN_LINES;
-	      }
-	      var hexPoints = geometryUtils.createRoundedHexagon(radius, radius / 5);
-	      this.context.beginPath();
-	      var hexStartX = x + radius;
-	      var hexStartY = y + radius;
-	      hexPoints.forEach(function (vertex, i, vertices) {
-	        vertex.x += hexStartX;
-	        vertex.y += hexStartY;
-	
-	        if (i === 0) {
-	          _this22.context.moveTo(vertex.x, vertex.y);
-	          return;
-	        }
-	        if (i % 2 === 0) {
-	          _this22.context.lineTo(vertex.x, vertex.y);
-	        } else {
-	          var prev = i === 0 ? vertices[vertices.length - 1] : vertices[i - 1];
-	          var xMid = (vertex.x + prev.x) / 2;
-	          var yMid = (vertex.y + prev.y) / 2;
-	
-	          var r = geometryUtils.distanceFromCoords(prev, vertex) / 2;
-	
-	          var bigIndex = Math.floor(i / 2);
-	          if ([5].includes(bigIndex)) {
-	            xMid -= r * (Math.sqrt(2) / 3);
-	          } else if ([2, 3].includes(bigIndex)) {
-	            xMid += r * (Math.sqrt(2) / 3);
-	          } else if ([4].includes(bigIndex)) {
-	            xMid += r * (Math.sqrt(2) / 3);
-	          } else if ([1].includes(bigIndex)) {
-	            xMid -= r * (Math.sqrt(2) / 3);
-	          } else if ([0].includes(bigIndex)) {
-	            xMid -= r * (Math.sqrt(3) / 3);
-	          }
-	
-	          if ([1, 2].includes(bigIndex)) {
-	            yMid += r / 2;
-	          } else if ([4, 5].includes(bigIndex)) {
-	            yMid -= r / 2;
-	          }
-	
-	          var startAngle = (30 + bigIndex * -1 * 60 + 360) % 360;
-	          var endAngle = (startAngle - 60 + 360) % 360;
-	
-	          _this22.context.arc(xMid, yMid, r, startAngle / 360 * (Math.PI * 2), endAngle / 360 * (Math.PI * 2), true);
-	        }
-	      });
-	      this.context.closePath();
-	      this.context.globalAlpha = ease.exp(0, 1, progress);
-	      var grad = this.context.createLinearGradient(x, y, x + radius * 2, y + radius * 2);
-	      grad.addColorStop(0, colorUtils[emotion][0]);
-	      grad.addColorStop(1, colorUtils[emotion][2]);
-	      this.context.fillStyle = grad;
-	      this.context.fill();
-	      this.context.globalAlpha = 1;
-	      this.context.font = '12px "Roboto Mono"';
-	      this.context.fillStyle = 'rgba(0, 0, 0, ' + ease.exp(0, 0.38, progress) + ')';
-	      this.context.fillText(emotion.toLowerCase() + ':' + strength, hexStartX + radius * 1.5, hexStartY + radius / 4);
-	    }
-	  }, {
-	    key: 'chrome',
-	    value: function chrome() {
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 2 : arguments[0];
-	
-	      this.finalImage = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
-	      this.drawChrome(duration);
-	    }
-	  }, {
-	    key: 'ears',
-	    value: function ears() {
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-	
-	      this.drawPointsWithAnim(this.filterLandmarks(faceUtils.LANDMARK_SECTIONS.EARS), duration);
-	    }
-	  }, {
-	    key: 'forehead',
-	    value: function forehead() {
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-	
-	      this.drawPointsWithAnim(this.filterLandmarks(faceUtils.LANDMARK_SECTIONS.FOREHEAD), duration);
-	    }
-	  }, {
-	    key: 'nose',
-	    value: function nose() {
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-	
-	      this.drawPointsWithAnim(this.filterLandmarks(faceUtils.LANDMARK_SECTIONS.NOSE), duration);
-	    }
-	  }, {
-	    key: 'mouth',
-	    value: function mouth() {
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-	
-	      this.drawPointsWithAnim(this.filterLandmarks(faceUtils.LANDMARK_SECTIONS.MOUTH), duration);
-	    }
-	  }, {
-	    key: 'chin',
-	    value: function chin() {
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-	
-	      this.drawPointsWithAnim(this.filterLandmarks(faceUtils.LANDMARK_SECTIONS.CHIN), duration);
-	    }
-	  }, {
-	    key: 'eyes',
-	    value: function eyes() {
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-	
-	      this.drawPointsWithAnim(this.filterLandmarks(faceUtils.LANDMARK_SECTIONS.EYES), duration);
-	    }
-	  }, {
-	    key: 'allFeatures',
-	    value: function allFeatures() {
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-	
-	      if (!this.isDrawing) {
-	        this.drawPointsWithAnim(this.filterLandmarks(faceUtils.LANDMARK_SECTIONS.FULL), duration);
-	      }
-	    }
-	  }, {
-	    key: 'getSubRectDimension',
-	    value: function getSubRectDimension(image) {
-	      var width = this.canvas.width;
-	      var height = this.canvas.height;
-	
-	      var widthsRatio = this.canvas.width / image.width;
-	      var heightsRatio = this.canvas.height / image.height;
-	
-	      if (widthsRatio > heightsRatio) {
-	        width = image.width;
-	        height = this.canvas.height / widthsRatio;
-	        this.imageScale = 1 / widthsRatio;
-	      } else {
-	        height = image.height;
-	        width = this.canvas.width / heightsRatio;
-	        this.imageScale = 1 / heightsRatio;
-	      }
-	
-	      return { width: width, height: height };
-	    }
-	  }, {
-	    key: 'setImageScale',
-	    value: function setImageScale() {
-	      var image = arguments.length <= 0 || arguments[0] === undefined ? this.image : arguments[0];
-	
-	      var widthsRatio = this.canvas.width / image.width;
-	      var heightsRatio = this.canvas.height / image.height;
-	
-	      if (widthsRatio > heightsRatio) {
-	        this.imageScale = 1 / widthsRatio;
-	      } else {
-	        this.imageScale = 1 / heightsRatio;
-	      }
-	    }
-	  }, {
-	    key: 'cleanUpImage',
-	    value: function cleanUpImage() {
-	      var _this23 = this;
-	
-	      this.resizeContent(function () {
-	        _this23.generateHexInfo();
-	        if (_this23.readyCallback) {
-	          _this23.readyCallback();
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'resizeContent',
-	    value: function resizeContent() {
-	      var callback = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-	
-	      var scaledMin = animationUtils.MIN_HEX_RADIUS * this.canvas.height;
-	      var scaledMax = animationUtils.MAX_HEX_RADIUS * this.canvas.height;
-	      var targetHexR = this.hexR;
-	
-	      if (this.hexR < scaledMin) {
-	        // make sure that we don't scale the image too much
-	        if (scaledMin - this.hexR > this.hexR * animationUtils.MAX_HEX_DIFF) {
-	          targetHexR = this.hexR + this.hexR * animationUtils.MAX_HEX_DIFF;
-	        } else {
-	          targetHexR = scaledMin;
-	        }
-	      } else if (this.hexR > scaledMax) {
-	        if (this.hexR - scaledMax > this.hexR * animationUtils.MAX_HEX_DIFF) {
-	          targetHexR = this.hexR - this.hexR * animationUtils.MAX_HEX_DIFF;
-	        } else {
-	          targetHexR = scaledMax;
-	        }
-	      }
-	
-	      // work backwards.
-	      var targetFaceDiff = targetHexR;
-	      var currentFaceDiff = this.faceBounds.right - this.faceBounds.left;
-	      // 1. get target difference between left and right face edges.
-	      if (this.faces.length === 1) {
-	        targetFaceDiff /= 2;
-	      }
-	      targetFaceDiff *= Math.sqrt(3);
-	      // 2. use this to calculate different, ideal image scale.
-	      var newImageScale = 1 / (targetFaceDiff / currentFaceDiff);
-	
-	      this.subRect = {
-	        width: this.canvas.width * newImageScale,
-	        height: this.canvas.height * newImageScale
-	      };
-	
-	      if (this.image.width < this.subRect.width) {
-	        this.subRect.width = this.image.width;
-	        this.subRect.height = this.canvas.height / this.canvas.width * this.subRect.width;
-	      }
-	
-	      this.width = this.subRect.width;
-	      this.height = this.subRect.height;
-	      this.resizedImageScale = this.subRect.width / this.canvas.width;
-	
-	      this.offsetX = (this.image.width - this.subRect.width) / 2;
-	      this.offsetY = (this.image.height - this.subRect.height) / 2;
-	
-	      this.resizedImageOffset = {
-	        x: this.offsetX,
-	        y: this.offsetY
-	      };
-	
-	      this.redrawBaseImage();
-	
-	      if (callback) {
-	        callback();
-	      }
-	    }
-	  }, {
-	    key: 'generateHexInfo',
-	    value: function generateHexInfo() {
-	      this.hexR = this.createHexR();
-	      this.hexVertices = this.createHexVertices(this.hexR);
-	    }
-	  }]);
-	
-	  return ImageElement;
-	}(_panelComponent2.default);
-	
-	exports.default = ImageElement;
-
-/***/ },
+/* 4 */,
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -6692,8 +4758,6 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-	
 	var _easings = __webpack_require__(17);
 	
 	var ease = _interopRequireWildcard(_easings);
@@ -6762,7 +4826,7 @@
 	              _this2.imageElement.timelines.push(colorTimeline);
 	            },
 	            onComplete: function onComplete() {
-	              _get(Object.getPrototypeOf(EmotionStep.prototype), 'killTimeline', _this2).call(_this2, colorTimeline);
+	              _this2.imageElement.killTimeline(colorTimeline);
 	            }
 	          });
 	
@@ -6790,7 +4854,7 @@
 	              });
 	            },
 	            onComplete: function onComplete() {
-	              _get(Object.getPrototypeOf(EmotionStep.prototype), 'killTween', _this2).call(_this2, active);
+	              _this2.imageElement.killTween(active);
 	            }
 	          });
 	          colorTimeline.to(_this2.canvas, duration * 0.25, {
@@ -6821,7 +4885,7 @@
 	            onComplete: function onComplete() {
 	              _this2.canvasUtils.redrawCurrentCanvas();
 	              _this2.imageElement.isDrawing = false;
-	              _this2.imageElement.super.killTween(active);
+	              _this2.imageElement.killTween(active);
 	            }
 	          });
 	        })();
@@ -9185,7 +7249,174 @@
 
 
 /***/ },
-/* 43 */
+/* 43 */,
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* global require */
+	
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _easings = __webpack_require__(17);
+	
+	var ease = _interopRequireWildcard(_easings);
+	
+	var _geometryUtils = __webpack_require__(8);
+	
+	var geometryUtils = _interopRequireWildcard(_geometryUtils);
+	
+	var _canvasUtils = __webpack_require__(16);
+	
+	var _canvasUtils2 = _interopRequireDefault(_canvasUtils);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Timeline = __webpack_require__(13);
+	
+	var BackgroundStep = function () {
+	  function BackgroundStep(imageElement, canvas, context, duration) {
+	    _classCallCheck(this, BackgroundStep);
+	
+	    this.imageElement = imageElement;
+	    this.canvas = canvas;
+	    this.context = context;
+	    this.vignettePattern;
+	
+	    this.canvasUtils = new _canvasUtils2.default(imageElement, canvas, context);
+	
+	    this.animateInBackground(duration);
+	  }
+	
+	  _createClass(BackgroundStep, [{
+	    key: 'animateInBackgroundFrame',
+	    value: function animateInBackgroundFrame() {
+	      var _this = this;
+	
+	      var progress = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	      var hexRadius = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
+	
+	      this.canvasUtils.redrawBaseImage();
+	
+	      this.canvasUtils.cutOutHex(false);
+	
+	      this.imageElement.context.save();
+	      this.imageElement.context.moveTo(0, 0);
+	      this.imageElement.context.translate(this.imageElement.eyesMidpoint.x, this.imageElement.eyesMidpoint.y);
+	
+	      var points = geometryUtils.createRoundedHexagon(Math.max(this.imageElement.hexR, hexRadius));
+	
+	      this.imageElement.context.moveTo(Math.max(this.imageElement.hexR, hexRadius), 0);
+	
+	      points.reverse();
+	
+	      points.forEach(function (vertex, i, vertices) {
+	        if (i % 2 === 0) {
+	          _this.imageElement.context.lineTo(vertex.x, vertex.y);
+	        } else {
+	          var prev = i === 0 ? vertices[vertices.length - 1] : vertices[i - 1];
+	          var xMid = (vertex.x + prev.x) / 2;
+	          var yMid = (vertex.y + prev.y) / 2;
+	          var r = geometryUtils.distanceFromCoords(prev, vertex) / 2;
+	
+	          var bigIndex = Math.floor(i / 2);
+	          if ([0, 4].includes(bigIndex)) {
+	            xMid -= r / 2;
+	          } else if ([1, 2].includes(bigIndex)) {
+	            xMid += r / 2;
+	          } else if ([5].includes(bigIndex)) {
+	            xMid -= r * Math.sqrt(3) / 2;
+	          } else if ([3].includes(bigIndex)) {
+	            xMid += r / 3;
+	          }
+	
+	          if ([5, 1].includes(bigIndex)) {
+	            yMid -= r / 2;
+	          } else if ([4].includes(bigIndex)) {
+	            yMid += r / 2;
+	          } else if ([0].includes(bigIndex)) {
+	            yMid -= r / 2;
+	          } else if ([3].includes(bigIndex)) {
+	            yMid += r / 2;
+	          }
+	
+	          var startAngle = (30 + bigIndex * 60 + 360) % 360;
+	          var endAngle = (startAngle + 60 + 360) % 360;
+	
+	          _this.imageElement.context.arc(xMid, yMid, r, startAngle / 360 * (Math.PI * 2), endAngle / 360 * (Math.PI * 2), false);
+	        }
+	      });
+	
+	      this.imageElement.context.closePath();
+	      this.imageElement.context.restore();
+	
+	      this.canvasUtils.drawBackgroundWithAlpha(ease.square(0, 0.25, progress));
+	    }
+	  }, {
+	    key: 'animateInBackground',
+	    value: function animateInBackground() {
+	      var _this2 = this;
+	
+	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+	
+	      var rEnd = this.imageElement.canvas.width;
+	
+	      if (duration === 0) {
+	        this.imageElement.ifNotDrawing(function () {
+	          _this2.animateInBackgroundFrame(1, rEnd);
+	        });
+	      } else {
+	        (function () {
+	          var active = null;
+	          var backgroundTimeline = new Timeline({
+	            onStart: function onStart() {
+	              _this2.imageElement.timelines.push(backgroundTimeline);
+	            },
+	            onComplete: function onComplete() {
+	              _this2.imageElement.killTimeline(backgroundTimeline);
+	              _this2.imageElement.context.restore();
+	            }
+	          });
+	
+	          var rStart = _this2.imageElement.hexR;
+	          var progress = 0;
+	          var currR = rStart;
+	
+	          backgroundTimeline.to(_this2.imageElement.canvas, duration, {
+	            onStart: function onStart() {
+	              active = backgroundTimeline.getActive()[0];
+	              _this2.imageElement.tweens.push(active);
+	            },
+	            onUpdate: function onUpdate() {
+	              progress = active.progress();
+	              currR = ease.exp(rStart, rEnd, progress);
+	              _this2.animateInBackgroundFrame(progress, currR);
+	            },
+	            onComplete: function onComplete() {
+	              _this2.imageElement.killTween(active);
+	            }
+	          });
+	        })();
+	      }
+	    }
+	  }]);
+	
+	  return BackgroundStep;
+	}();
+	
+	exports.default = BackgroundStep;
+
+/***/ },
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* global require, single, document, states, requestAnimationFrame */
@@ -9606,172 +7837,6 @@
 	}(_panelComponent2.default);
 	
 	exports.default = ImageElement;
-
-/***/ },
-/* 44 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* global require */
-	
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _easings = __webpack_require__(17);
-	
-	var ease = _interopRequireWildcard(_easings);
-	
-	var _geometryUtils = __webpack_require__(8);
-	
-	var geometryUtils = _interopRequireWildcard(_geometryUtils);
-	
-	var _canvasUtils = __webpack_require__(16);
-	
-	var _canvasUtils2 = _interopRequireDefault(_canvasUtils);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var Timeline = __webpack_require__(13);
-	
-	var BackgroundStep = function () {
-	  function BackgroundStep(imageElement, canvas, context, duration) {
-	    _classCallCheck(this, BackgroundStep);
-	
-	    this.imageElement = imageElement;
-	    this.canvas = canvas;
-	    this.context = context;
-	    this.vignettePattern;
-	
-	    this.canvasUtils = new _canvasUtils2.default(imageElement, canvas, context);
-	
-	    this.animateInBackground(duration);
-	  }
-	
-	  _createClass(BackgroundStep, [{
-	    key: 'animateInBackgroundFrame',
-	    value: function animateInBackgroundFrame() {
-	      var _this = this;
-	
-	      var progress = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	      var hexRadius = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
-	
-	      this.canvasUtils.redrawBaseImage();
-	
-	      this.canvasUtils.cutOutHex(false);
-	
-	      this.imageElement.context.save();
-	      this.imageElement.context.moveTo(0, 0);
-	      this.imageElement.context.translate(this.imageElement.eyesMidpoint.x, this.imageElement.eyesMidpoint.y);
-	
-	      var points = geometryUtils.createRoundedHexagon(Math.max(this.imageElement.hexR, hexRadius));
-	
-	      this.imageElement.context.moveTo(Math.max(this.imageElement.hexR, hexRadius), 0);
-	
-	      points.reverse();
-	
-	      points.forEach(function (vertex, i, vertices) {
-	        if (i % 2 === 0) {
-	          _this.imageElement.context.lineTo(vertex.x, vertex.y);
-	        } else {
-	          var prev = i === 0 ? vertices[vertices.length - 1] : vertices[i - 1];
-	          var xMid = (vertex.x + prev.x) / 2;
-	          var yMid = (vertex.y + prev.y) / 2;
-	          var r = geometryUtils.distanceFromCoords(prev, vertex) / 2;
-	
-	          var bigIndex = Math.floor(i / 2);
-	          if ([0, 4].includes(bigIndex)) {
-	            xMid -= r / 2;
-	          } else if ([1, 2].includes(bigIndex)) {
-	            xMid += r / 2;
-	          } else if ([5].includes(bigIndex)) {
-	            xMid -= r * Math.sqrt(3) / 2;
-	          } else if ([3].includes(bigIndex)) {
-	            xMid += r / 3;
-	          }
-	
-	          if ([5, 1].includes(bigIndex)) {
-	            yMid -= r / 2;
-	          } else if ([4].includes(bigIndex)) {
-	            yMid += r / 2;
-	          } else if ([0].includes(bigIndex)) {
-	            yMid -= r / 2;
-	          } else if ([3].includes(bigIndex)) {
-	            yMid += r / 2;
-	          }
-	
-	          var startAngle = (30 + bigIndex * 60 + 360) % 360;
-	          var endAngle = (startAngle + 60 + 360) % 360;
-	
-	          _this.imageElement.context.arc(xMid, yMid, r, startAngle / 360 * (Math.PI * 2), endAngle / 360 * (Math.PI * 2), false);
-	        }
-	      });
-	
-	      this.imageElement.context.closePath();
-	      this.imageElement.context.restore();
-	
-	      this.canvasUtils.drawBackgroundWithAlpha(ease.square(0, 0.25, progress));
-	    }
-	  }, {
-	    key: 'animateInBackground',
-	    value: function animateInBackground() {
-	      var _this2 = this;
-	
-	      var duration = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	
-	      var rEnd = this.imageElement.canvas.width;
-	
-	      if (duration === 0) {
-	        this.imageElement.ifNotDrawing(function () {
-	          _this2.animateInBackgroundFrame(1, rEnd);
-	        });
-	      } else {
-	        (function () {
-	          var active = null;
-	          var backgroundTimeline = new Timeline({
-	            onStart: function onStart() {
-	              _this2.imageElement.timelines.push(backgroundTimeline);
-	            },
-	            onComplete: function onComplete() {
-	              _this2.imageElement.killTimeline(backgroundTimeline);
-	              _this2.imageElement.context.restore();
-	            }
-	          });
-	
-	          var rStart = _this2.imageElement.hexR;
-	          var progress = 0;
-	          var currR = rStart;
-	
-	          backgroundTimeline.to(_this2.imageElement.canvas, duration, {
-	            onStart: function onStart() {
-	              active = backgroundTimeline.getActive()[0];
-	              _this2.imageElement.tweens.push(active);
-	            },
-	            onUpdate: function onUpdate() {
-	              progress = active.progress();
-	              currR = ease.exp(rStart, rEnd, progress);
-	              _this2.animateInBackgroundFrame(progress, currR);
-	            },
-	            onComplete: function onComplete() {
-	              _this2.imageElement.killTween(active);
-	            }
-	          });
-	        })();
-	      }
-	    }
-	  }]);
-	
-	  return BackgroundStep;
-	}();
-	
-	exports.default = BackgroundStep;
 
 /***/ }
 /******/ ]);

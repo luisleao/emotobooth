@@ -2,14 +2,15 @@
 
 'use strict';
 
-import ImageElement from './imageElement';
-import ImageElementSplit from './imageElementSplit';
+// import ImageElement from './imageElement';
+import nextImageElement from './imageElementNext';
 import JsonElement from './jsonElement';
 
 const EVENT_NAME_NEXT = 'google-next';
-const EVENT_NAME_HORIZON = 'google-horizon';
-// const EVENT = EVENT_NAME_NEXT;
-const EVENT = EVENT_NAME_HORIZON;
+const EVENT = EVENT_NAME_NEXT;
+
+// const EVENT_NAME_HORIZON = 'google-horizon';
+// const EVENT = EVENT_NAME_HORIZON;
 
 export default class Panel {
   constructor(jsonData) {
@@ -26,13 +27,13 @@ export default class Panel {
 
   init() {
     if (EVENT === EVENT_NAME_NEXT) {
-      this.image = new ImageElement(this.imagePath, this.respPath, () => {
+      this.image = new nextImageElement(this.imagePath, this.respPath, () => {
          this.imageIsReady();
       });
     } else {
-      this.image = new ImageElementSplit(this.imagePath, this.respPath, () => {
-         this.imageIsReady();
-      });
+      // this.image = new ImageElementSplit(this.imagePath, this.respPath, () => {
+      //    this.imageIsReady();
+      // });
     }
 
     this.jsonElement = new JsonElement(this.reqPath, this.respPath);
